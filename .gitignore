@@ -1,0 +1,9 @@
+.env
+node_modules
+dist
+*.db
+*.db-*
+tunnel/
+dns-before-cloudflare.txt
+docker-compose.live.yml
+.DS_Store

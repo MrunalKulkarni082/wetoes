@@ -1,0 +1,34 @@
+# Wetoes — app + local LLM.
+# Dev:  docker compose up --build        (app on http://localhost:3000)
+# Only the app port is published, and only on 127.0.0.1. Ollama is internal-only.
+services:
+  app:
+    build: ./app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_PATH: /data/wetoes.db
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+    volumes:
+      - wetoes-data:/data
+    ports:
+      - "127.0.0.1:3000:3000"
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    depends_on: [ollama]
+
+  ollama:
+    image: ollama/ollama:0.6.2
+    restart: unless-stopped
+    volumes:
+      - ollama-models:/root/.ollama
+    environment:
+      OLLAMA_KEEP_ALIVE: 24h
+      OLLAMA_NUM_PARALLEL: "1"
+    # no ports: reachable only from the app container
+
+volumes:
+  wetoes-data:
+  ollama-models:

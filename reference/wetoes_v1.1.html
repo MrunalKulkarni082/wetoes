@@ -1,0 +1,1101 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wetoes — the anti-recommender</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#F5EDDF">
+<meta name="description" content="we hand you one thing. you veto or you commit. the anti-recommender.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="wetoes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;overscroll-behavior:none}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:#F5EDDF;
+  background-image:radial-gradient(circle at 1px 1px, rgba(26,22,19,0.055) 1px, transparent 0);
+  background-size:13px 13px;
+  color:#1A1613;
+  -webkit-font-smoothing:antialiased;
+  transition:background 0.5s ease, color 0.5s ease;
+}
+body.dark{
+  background:#15110E;
+  background-image:radial-gradient(circle at 1px 1px, rgba(245,237,223,0.045) 1px, transparent 0);
+  color:#F5EDDF;
+}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none;text-align:left}
+
+#app{max-width:460px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;padding:0 24px 28px}
+.screen{display:none;flex-direction:column;min-height:100vh;min-height:100dvh;padding-top:44px;position:relative;animation:fadein 0.4s ease}
+.screen.active{display:flex}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* top bar */
+.topbar{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:3}
+.wordmark{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:inherit}
+.wordmark .dot{color:#E8402C}
+body.dark .wordmark .dot{color:#F2D97F}
+.topmeta{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#5C4F42;font-weight:700}
+body.dark .topmeta{color:#A69D8E}
+.backbtn{display:flex;align-items:center;gap:6px;font-size:13px;color:#5C4F42;font-family:'Instrument Serif',serif;font-style:italic}
+body.dark .backbtn{color:#A69D8E}
+
+/* typography helpers */
+.serif{font-family:'Instrument Serif',serif;font-style:italic}
+.mono{font-family:'JetBrains Mono',monospace}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#5C4F42;font-weight:700}
+body.dark .eyebrow{color:#A69D8E}
+.eyebrow.red{color:#E8402C}
+body.dark .eyebrow.amber{color:#F2D97F}
+.muted{color:#5C4F42}
+body.dark .muted{color:#A69D8E}
+h1.hero{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:-0.03em;line-height:0.9;color:inherit;text-shadow:0 1px 0 rgba(255,255,255,0.3)}
+body.dark h1.hero{text-shadow:none}
+.red{color:#E8402C}
+body.dark .red{color:#F2D97F}
+
+/* blobs */
+.blob{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:1}
+
+/* buttons */
+.cta{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  background:#1A1613;color:#F5EDDF;padding:20px 24px;border-radius:22px;
+  font-size:16px;font-weight:600;letter-spacing:0.01em;width:100%;
+  box-shadow:0 2px 0 rgba(26,22,19,0.1), 0 24px 44px -22px rgba(26,22,19,0.55);
+  text-align:center;justify-content:center;
+}
+body.dark .cta{background:#F2D97F;color:#15110E;box-shadow:0 2px 0 rgba(242,217,127,0.2), 0 24px 44px -22px rgba(242,217,127,0.4)}
+.cta .arrow{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;font-weight:400}
+.cta:active{transform:scale(0.98)}
+
+.pill{padding:10px 16px;border-radius:999px;font-size:14px;font-weight:500;background:#FFFCF5;border:1px solid rgba(26,22,19,0.18);font-family:'Instrument Serif',serif;font-style:italic;display:inline-flex;align-items:center;gap:6px}
+body.dark .pill{background:rgba(245,237,223,0.08);border-color:rgba(245,237,223,0.15);color:#F5EDDF}
+.pill.active{background:#1A1613;color:#F5EDDF;border-color:#1A1613}
+body.dark .pill.active{background:#F2D97F;color:#15110E;border-color:#F2D97F}
+.pill.mono{font-family:'JetBrains Mono',monospace;font-style:normal;font-weight:500}
+
+/* chips row */
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{font-size:11px;font-weight:600;letter-spacing:0.02em;padding:5px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.chip.taupe{background:#D4CBB8;color:#1A1613}
+.chip.moss{background:#B8BE94;color:#1A1613}
+.chip.butter{background:#F2D97F;color:#1A1613}
+.chip.blush{background:#E8B4A5;color:#1A1613}
+.chip.paper{background:#FFFCF5;border:1px solid rgba(26,22,19,0.12);color:#1A1613}
+body.dark .chip.paper{background:rgba(245,237,223,0.08);border-color:rgba(245,237,223,0.15);color:#F5EDDF}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:#1A1613}
+
+/* mood chips grid */
+.moodgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.moodchip{aspect-ratio:1.1;border-radius:20px;display:flex;flex-direction:column;justify-content:space-between;padding:14px;font-family:'Instrument Serif',serif;font-style:italic;font-size:26px;line-height:0.95;color:#1A1613;box-shadow:0 1px 0 rgba(26,22,19,0.06), 0 10px 22px -12px rgba(26,22,19,0.18);transition:transform 0.2s}
+.moodchip:active{transform:scale(0.96)}
+.moodchip .num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.22em;opacity:0.5;font-weight:700;font-style:normal}
+.moodchip.m1{background:#D4CBB8;transform:rotate(-1.2deg)}
+.moodchip.m2{background:#F2D97F;transform:rotate(1.4deg)}
+.moodchip.m3{background:#BDB5A1;transform:rotate(-0.8deg)}
+.moodchip.m4{background:#FFFCF5;border:1px solid rgba(26,22,19,0.1);transform:rotate(1deg)}
+.moodchip.m5{background:#B8BE94;transform:rotate(-1.4deg)}
+.moodchip.m6{background:#E8B4A5;transform:rotate(1.2deg)}
+
+/* card */
+.card{background:#FFFCF5;border-radius:24px;padding:24px;position:relative;box-shadow:0 2px 0 rgba(26,22,19,0.04), 0 28px 60px -24px rgba(26,22,19,0.22);border:1px solid rgba(26,22,19,0.06);overflow:hidden}
+body.dark .card{background:#26211C;border-color:rgba(245,237,223,0.08);box-shadow:0 2px 0 rgba(242,217,127,0.06), 0 30px 60px -24px rgba(0,0,0,0.6)}
+.card .seal{position:absolute;top:18px;right:18px;width:60px;height:60px;border:1.2px solid #E8402C;border-radius:50%;transform:rotate(10deg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:7px;color:#E8402C;letter-spacing:0.18em;text-align:center;line-height:1.3;font-weight:700}
+body.dark .card .seal{border-color:#F2D97F;color:#F2D97F}
+.card .seal .num{font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;letter-spacing:0;line-height:1;font-weight:400}
+.meta{display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px dashed rgba(26,22,19,0.2);margin-top:18px}
+body.dark .meta{border-top-color:rgba(245,237,223,0.2)}
+.meta .row{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.meta .k{color:#5C4F42;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;font-weight:500}
+body.dark .meta .k{color:#A69D8E}
+.meta .v{color:#1A1613;font-weight:600}
+body.dark .meta .v{color:#F5EDDF}
+.meta .v.mono{font-family:'JetBrains Mono',monospace}
+
+/* action buttons row */
+.actions{display:grid;grid-template-columns:1fr 1.6fr;gap:10px;margin-top:16px}
+.btn-veto{display:flex;align-items:center;justify-content:center;background:transparent;color:#E8402C;padding:20px;border-radius:20px;font-size:14px;font-weight:700;letter-spacing:0.14em;border:2px solid #E8402C;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.btn-veto:active{background:rgba(232,64,44,0.08)}
+.btn-yes{display:flex;align-items:center;justify-content:center;gap:8px;background:#1A1613;color:#F5EDDF;padding:20px;border-radius:20px;font-size:14px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;box-shadow:0 2px 0 rgba(26,22,19,0.1), 0 20px 36px -16px rgba(26,22,19,0.45)}
+body.dark .btn-yes{background:#F2D97F;color:#15110E;box-shadow:0 2px 0 rgba(242,217,127,0.25), 0 20px 40px -16px rgba(242,217,127,0.35)}
+.btn-yes .a{font-style:italic;font-family:'Instrument Serif',serif;font-size:20px;text-transform:none;letter-spacing:0;font-weight:400}
+.btn-yes:active,.btn-veto:active{transform:scale(0.98)}
+
+/* category list */
+.catlist{display:flex;flex-direction:column;gap:9px}
+.cat{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-radius:18px;transition:transform 0.15s}
+.cat:active{transform:scale(0.98)}
+.cat .inner{display:flex;align-items:center;gap:14px}
+.cat .label{display:flex;flex-direction:column;gap:3px}
+.cat .num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.3em;font-weight:700}
+.cat .name{font-family:'Instrument Serif',serif;font-style:italic;font-size:26px;line-height:0.95}
+.cat .last{font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em}
+.cat .arr{font-family:'Instrument Serif',serif;font-style:italic;font-size:24px}
+
+/* genre tag cloud */
+.tagcloud{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.genre{padding:11px 18px;border-radius:999px;font-weight:500;background:#FFFCF5;color:#1A1613;border:1px solid rgba(26,22,19,0.15);font-family:'Instrument Serif',serif;font-style:italic}
+.genre.a{background:#E8B4A5;border-color:transparent}
+.genre.b{background:#F2D97F;border-color:transparent;transform:rotate(1.5deg)}
+.genre.c{background:#B8BE94;border-color:transparent}
+.genre.d{background:#1A1613;color:#F5EDDF;border-color:transparent;transform:rotate(-2deg);box-shadow:0 2px 0 rgba(26,22,19,0.08), 0 10px 22px -10px rgba(26,22,19,0.4)}
+.genre.e{background:#D4CBB8;border-color:transparent}
+.genre.f{background:#E8402C;color:#F5EDDF;border-color:transparent;transform:rotate(1.5deg)}
+
+/* notice banner (vetoed/success) */
+.notice{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;margin-top:16px}
+.notice.red{background:rgba(232,64,44,0.08);border:1px solid rgba(232,64,44,0.25)}
+.notice .label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#E8402C;font-weight:700}
+.notice .text{font-size:13px;font-family:'Instrument Serif',serif;font-style:italic;font-size:15px;text-decoration:line-through;text-decoration-color:rgba(26,22,19,0.4)}
+body.dark .notice .text{text-decoration-color:rgba(245,237,223,0.4)}
+
+/* yes screen */
+.yes-screen{
+  background:linear-gradient(170deg, #F2D5C7 0%, #E8B4A5 55%, #D99E8C 100%);
+  background-image:radial-gradient(circle at 1px 1px, rgba(26,22,19,0.05) 1px, transparent 0),linear-gradient(170deg, #F2D5C7 0%, #E8B4A5 55%, #D99E8C 100%);
+  background-size:13px 13px, auto;
+  margin:0 -24px;padding:44px 32px 28px;min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;
+}
+body.dark .yes-screen{background:linear-gradient(170deg, #26211C 0%, #2A1F18 55%, #2E1D15 100%)}
+.sun{position:absolute;top:-140px;left:50%;transform:translateX(-50%);width:520px;height:420px;background:radial-gradient(ellipse at center, rgba(242,217,127,0.55) 0%, rgba(242,217,127,0.12) 40%, transparent 70%);pointer-events:none;z-index:1}
+.locked{width:72px;height:72px;border:1.3px solid #1A1613;border-radius:50%;transform:rotate(-8deg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:8px;color:#1A1613;letter-spacing:0.18em;text-align:center;line-height:1.3;background:rgba(255,252,245,0.3);font-weight:700}
+.locked .word{font-family:'Instrument Serif',serif;font-style:italic;font-size:20px;letter-spacing:0;line-height:1;margin:1px 0;font-weight:400}
+
+.hero-yes{font-family:'Instrument Serif',serif;font-style:italic;font-size:118px;line-height:0.84;font-weight:400;letter-spacing:-0.055em;color:#1A1613;text-shadow:0 1px 0 rgba(255,255,255,0.3);text-align:center}
+.undo{display:flex;justify-content:center;align-items:center;gap:10px;padding:13px;border-radius:14px;background:transparent;border:1.4px dashed rgba(26,22,19,0.3);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;color:#1A1613;width:100%}
+.undo .n{font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;letter-spacing:0;text-transform:none;font-weight:400}
+
+/* trust/memory */
+.stat-hero{display:flex;align-items:baseline;gap:10px}
+.stat-hero .big{font-family:'Instrument Serif',serif;font-style:italic;font-size:88px;line-height:0.85;font-weight:400}
+.stat-hero .big.red{color:#E8402C;font-size:52px}
+.stat-hero .lbl{font-family:'Instrument Serif',serif;font-style:italic;font-size:24px}
+.dots{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:16px}
+.dots .d{display:inline-block;width:7px;height:7px;border-radius:50%}
+.dots .d.k{background:#7E8C5F}
+.dots .d.v{background:#E8402C}
+
+/* logrow */
+.logrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(26,22,19,0.06)}
+body.dark .logrow{border-bottom-color:rgba(245,237,223,0.08)}
+.logrow:last-child{border:none}
+.logrow .name{font-family:'Instrument Serif',serif;font-style:italic;font-size:16px}
+.logrow .when{font-family:'JetBrains Mono',monospace;font-size:10px;color:#5C4F42;margin-top:1px;letter-spacing:0.04em}
+body.dark .logrow .when{color:#A69D8E}
+.tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;font-weight:700;padding:5px 10px;border-radius:999px}
+.tag.kept{background:#7E8C5F;color:#F5EDDF}
+.tag.vetoed{background:transparent;color:#E8402C;border:1px solid #E8402C}
+
+/* welcome */
+.welcome-hero{font-family:'Instrument Serif',serif;font-style:italic;font-size:124px;line-height:0.85;letter-spacing:-0.045em;color:inherit;font-weight:400;text-shadow:0 1px 0 rgba(255,255,255,0.3)}
+body.dark .welcome-hero{text-shadow:none}
+
+.spine{position:absolute;left:14px;top:150px;transform:rotate(-90deg);transform-origin:left top;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.4em;font-weight:600;color:#5C4F42;white-space:nowrap;pointer-events:none}
+body.dark .spine{color:#A69D8E}
+
+/* footer meta */
+.footmeta{text-align:center;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;color:#5C4F42}
+body.dark .footmeta{color:#A69D8E}
+
+/* utility */
+.sep{flex:1}
+.mt-s{margin-top:12px}.mt-m{margin-top:20px}.mt-l{margin-top:30px}.mt-xl{margin-top:48px}
+.mb-s{margin-bottom:12px}.mb-m{margin-bottom:20px}.mb-l{margin-bottom:30px}
+
+/* genre colors cycle for music tags */
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ========== DATA ========== */
+
+const FOODS = [
+  // veg + vegan + cheap + quick
+  {id:'f01',name:'vada pav',why:'cheap, hot, hands-only. 20 min.',where:'aaswad · dadar west',cost:'₹25',time:22,diet:['veg','vegan'],moods:['tired','blah','okay'],budget:'u100'},
+  {id:'f02',name:'misal pav',why:'spicy, filling, wakes you up.',where:'mamledar · thane',cost:'₹80',time:25,diet:['veg','vegan'],moods:['wired','okay','good'],budget:'u100'},
+  {id:'f03',name:'idli sambar',why:'soft, hot, 2 min to eat.',where:'cafe madras · matunga',cost:'₹70',time:20,diet:['veg','vegan'],moods:['tired','blah','okay'],budget:'u100'},
+  {id:'f04',name:'poha',why:'warm, familiar, 10 minute thing.',where:'your kitchen',cost:'₹0',time:10,diet:['veg','vegan'],moods:['tired','blah','okay','good'],budget:'free'},
+  {id:'f05',name:'upma',why:'5 ingredients, done hot, pantry has it.',where:'your kitchen',cost:'₹0',time:12,diet:['veg','vegan'],moods:['tired','blah'],budget:'free'},
+  {id:'f06',name:'dal khichdi',why:'soft, warming, body-forgiving.',where:'your kitchen',cost:'₹20',time:25,diet:['veg','vegan'],moods:['tired','blah','okay'],budget:'u100'},
+  {id:'f07',name:'masala maggi (but good)',why:'ghee + egg make it count.',where:'your pantry',cost:'₹15',time:7,diet:['veg'],moods:['tired','wired','blah'],budget:'u100'},
+  {id:'f08',name:'pav bhaji',why:'butter, pav, satisfaction.',where:'sardar · tardeo',cost:'₹180',time:30,diet:['veg'],moods:['wired','okay','good','glowing'],budget:'u300'},
+  {id:'f09',name:'masala dosa',why:'crisp, potato, chutney trio.',where:'swati snacks · tardeo',cost:'₹160',time:25,diet:['veg','vegan'],moods:['okay','good','glowing'],budget:'u300'},
+  {id:'f10',name:'chole bhature',why:'fried bread, spicy chickpeas. heavy and worth it.',where:'punjab grill or any udipi',cost:'₹140',time:25,diet:['veg'],moods:['wired','good','glowing'],budget:'u300'},
+  {id:'f11',name:'rajma chawal',why:'homestyle. the real comfort.',where:'your kitchen',cost:'₹30',time:35,diet:['veg','vegan'],moods:['tired','blah','okay'],budget:'u100'},
+  {id:'f12',name:'bhel puri',why:'crunchy, sour, 4-minute joy.',where:'juhu beach · or any stall',cost:'₹60',time:10,diet:['veg','vegan'],moods:['blah','okay','good'],budget:'u100'},
+  {id:'f13',name:'sev puri',why:'sweet, spicy, tangy — all at once.',where:'elco · bandra',cost:'₹80',time:12,diet:['veg','vegan'],moods:['good','glowing'],budget:'u100'},
+  {id:'f14',name:'pani puri',why:'loud, cold, nobody is sad eating this.',where:'any stall you trust',cost:'₹50',time:10,diet:['veg','vegan'],moods:['blah','okay','good','glowing'],budget:'u100'},
+  {id:'f15',name:'veg biryani',why:'long-cooked rice, fried onions, raita.',where:'persia darbar · dadar',cost:'₹220',time:35,diet:['veg'],moods:['okay','good','glowing'],budget:'u300'},
+  {id:'f16',name:'paneer butter masala + naan',why:'creamy, buttery, probably too much.',where:'britannia · fort',cost:'₹340',time:35,diet:['veg'],moods:['good','glowing'],budget:'splurge'},
+  {id:'f17',name:'grilled sandwich',why:'cheap, hot, hostel-brain friendly.',where:'any irani cafe',cost:'₹60',time:15,diet:['veg'],moods:['tired','blah'],budget:'u100'},
+  {id:'f18',name:'aloo paratha + curd',why:'desi carbs, soul food.',where:'moti mahal · andheri',cost:'₹120',time:25,diet:['veg'],moods:['tired','blah','okay'],budget:'u300'},
+  {id:'f19',name:'thali',why:'everything at once. no decisions after this.',where:'friends union joshi club · bandra',cost:'₹280',time:40,diet:['veg'],moods:['wired','good','glowing'],budget:'u300'},
+  {id:'f20',name:'ragda pattice',why:'potato cake, white peas. underrated.',where:'cannon pav bhaji · cst',cost:'₹90',time:20,diet:['veg','vegan'],moods:['okay','good'],budget:'u100'},
+  {id:'f21',name:'medu vada',why:'crisp outside, fluffy inside.',where:'anand bhavan · matunga',cost:'₹65',time:15,diet:['veg','vegan'],moods:['okay','good'],budget:'u100'},
+  {id:'f22',name:'uttapam',why:'fat dosa with onions. chewy, hot.',where:'ramnath · lower parel',cost:'₹100',time:20,diet:['veg','vegan'],moods:['okay','good'],budget:'u100'},
+  {id:'f23',name:'fruit salad with honey',why:'cold, sweet, light. done in 4.',where:'your kitchen',cost:'₹60',time:5,diet:['veg','vegan'],moods:['glowing','good'],budget:'u100'},
+  {id:'f24',name:'curd rice',why:'cool, sour, zero effort.',where:'your kitchen',cost:'₹15',time:5,diet:['veg'],moods:['tired','blah'],budget:'free'},
+  {id:'f25',name:'chaas + khakra',why:'cumin curd + crispy bread. gujju lunch.',where:'your kitchen',cost:'₹20',time:3,diet:['veg'],moods:['okay'],budget:'free'},
+  {id:'f26',name:'jeera rice + dal',why:'the baseline. the safe bet.',where:'your kitchen',cost:'₹25',time:25,diet:['veg','vegan'],moods:['tired','blah','okay'],budget:'free'},
+  {id:'f27',name:'veg frankie',why:'roll, sauce, happy walk home.',where:'tibbs · multiple',cost:'₹120',time:15,diet:['veg'],moods:['okay','good'],budget:'u300'},
+  {id:'f28',name:'dabeli',why:'kutchi sandwich. sweet-savory-crunchy.',where:'navi mumbai or kutchi stalls',cost:'₹40',time:10,diet:['veg'],moods:['okay','good','glowing'],budget:'u100'},
+  // non-veg
+  {id:'f29',name:'chicken biryani',why:'the one. rice, meat, raita, done.',where:'jaffer bhai · mahim',cost:'₹340',time:40,diet:['non-veg'],moods:['wired','good','glowing'],budget:'splurge'},
+  {id:'f30',name:'butter chicken + naan',why:'rich, creamy, forgiving.',where:'moti mahal · andheri',cost:'₹400',time:40,diet:['non-veg'],moods:['good','glowing'],budget:'splurge'},
+  {id:'f31',name:'kheema pav',why:'soft minced mutton, butter pav.',where:'olympia · colaba',cost:'₹260',time:25,diet:['non-veg'],moods:['wired','good'],budget:'u300'},
+  {id:'f32',name:'chicken 65',why:'fried, spicy, finger food.',where:'anand lunch home · fort',cost:'₹240',time:25,diet:['non-veg'],moods:['wired','good','glowing'],budget:'u300'},
+  {id:'f33',name:'fish curry rice',why:'coastal, coconut, warm in the stomach.',where:'trishna · fort',cost:'₹380',time:30,diet:['non-veg'],moods:['tired','okay','good'],budget:'splurge'},
+  {id:'f34',name:'egg bhurji pav',why:'spicy scrambled eggs. 15 min everywhere.',where:'any roadside',cost:'₹80',time:12,diet:['non-veg'],moods:['tired','blah','okay'],budget:'u100'},
+  {id:'f35',name:'omelette + toast',why:'the lazy win. 7 minutes.',where:'your kitchen',cost:'₹20',time:7,diet:['non-veg'],moods:['tired','blah'],budget:'free'},
+  {id:'f36',name:'shawarma roll',why:'hot, loaded, one-handed.',where:'noor mohammadi · mohammad ali rd',cost:'₹180',time:15,diet:['non-veg'],moods:['wired','good'],budget:'u300'},
+  {id:'f37',name:'chicken frankie',why:'crispy roll, green chutney, gets eaten fast.',where:'tibbs · multiple',cost:'₹150',time:15,diet:['non-veg'],moods:['okay','good'],budget:'u300'},
+  {id:'f38',name:'kathi roll',where:'kolkata rolls · bandra',why:'egg + chicken + lime. the roll that started it.',cost:'₹160',time:15,diet:['non-veg'],moods:['okay','good'],budget:'u300'},
+  {id:'f39',name:'chicken tikka',why:'charred, smoky, eat with onions.',where:'bademiya · colaba',cost:'₹280',time:25,diet:['non-veg'],moods:['good','glowing'],budget:'u300'},
+  {id:'f40',name:'grilled chicken sandwich',why:'protein, carbs, on a walk.',where:'subway or your toaster',cost:'₹180',time:12,diet:['non-veg'],moods:['okay','good'],budget:'u300'},
+  {id:'f41',name:'chicken shawarma plate',why:'rice, chicken, garlic sauce. the full.',where:'kabab korner',cost:'₹260',time:20,diet:['non-veg'],moods:['wired','good'],budget:'u300'},
+  {id:'f42',name:'chicken soup',why:'warm, salty, stops the day.',where:'your kitchen',cost:'₹60',time:20,diet:['non-veg'],moods:['tired','blah'],budget:'u100'},
+];
+
+const MUSIC = [
+  // k-pop
+  {id:'m01',artist:'NewJeans',track:'Supernatural',genre:'kpop',moods:['wired','good','glowing'],q:'NewJeans Supernatural'},
+  {id:'m02',artist:'IVE',track:'Love Dive',genre:'kpop',moods:['wired','glowing'],q:'IVE Love Dive'},
+  {id:'m03',artist:'LE SSERAFIM',track:'Perfect Night',genre:'kpop',moods:['wired','good'],q:'LE SSERAFIM Perfect Night'},
+  {id:'m04',artist:'TWICE',track:'Fancy',genre:'kpop',moods:['good','glowing'],q:'TWICE Fancy'},
+  // hip hop
+  {id:'m05',artist:'Kendrick Lamar',track:'Not Like Us',genre:'hiphop',moods:['wired','okay'],q:'Kendrick Lamar Not Like Us'},
+  {id:'m06',artist:'Drake',track:'Rich Flex',genre:'hiphop',moods:['wired','good'],q:'Drake Rich Flex'},
+  {id:'m07',artist:'Travis Scott',track:'FE!N',genre:'hiphop',moods:['wired'],q:'Travis Scott FEIN'},
+  {id:'m08',artist:'Tyler, The Creator',track:'See You Again',genre:'hiphop',moods:['okay','good'],q:'Tyler The Creator See You Again'},
+  // classical
+  {id:'m09',artist:'Chopin',track:'Nocturne Op.9 No.2',genre:'classical',moods:['tired','blah','okay'],q:'Chopin Nocturne Op 9 No 2'},
+  {id:'m10',artist:'Debussy',track:'Clair de Lune',genre:'classical',moods:['tired','okay'],q:'Debussy Clair de Lune'},
+  {id:'m11',artist:'Bach',track:'Air on the G String',genre:'classical',moods:['tired','blah'],q:'Bach Air on the G String'},
+  {id:'m12',artist:'Satie',track:'Gymnopédie No.1',genre:'classical',moods:['tired','blah','okay'],q:'Erik Satie Gymnopedie No 1'},
+  // lofi
+  {id:'m13',artist:'Lofi Girl',track:'coffee time',genre:'lofi',moods:['tired','blah','okay'],q:'lofi coffee time'},
+  {id:'m14',artist:'Nujabes',track:'Aruarian Dance',genre:'lofi',moods:['tired','okay'],q:'Nujabes Aruarian Dance'},
+  {id:'m15',artist:'Idealism',track:'Blossom',genre:'lofi',moods:['tired','okay'],q:'Idealism Blossom lofi'},
+  {id:'m16',artist:'Jinsang',track:'Affection',genre:'lofi',moods:['okay','good'],q:'Jinsang Affection'},
+  // bollywood
+  {id:'m17',artist:'Arijit Singh',track:'Kesariya',genre:'bollywood',moods:['okay','good','glowing'],q:'Kesariya Brahmastra'},
+  {id:'m18',artist:'Pritam',track:'Agar Tum Saath Ho',genre:'bollywood',moods:['tired','blah'],q:'Agar Tum Saath Ho Tamasha'},
+  {id:'m19',artist:'A.R. Rahman',track:'Kun Faya Kun',genre:'bollywood',moods:['tired','okay'],q:'Kun Faya Kun Rockstar'},
+  {id:'m20',artist:'Amit Trivedi',track:'Iktara',genre:'bollywood',moods:['okay','good'],q:'Iktara Wake Up Sid'},
+  // indie
+  {id:'m21',artist:'Phoebe Bridgers',track:'Motion Sickness',genre:'indie',moods:['blah','okay'],q:'Phoebe Bridgers Motion Sickness'},
+  {id:'m22',artist:'Clairo',track:'Bags',genre:'indie',moods:['okay','good'],q:'Clairo Bags'},
+  {id:'m23',artist:'Beabadoobee',track:'Coffee',genre:'indie',moods:['okay','good'],q:'beabadoobee Coffee'},
+  {id:'m24',artist:'Sufjan Stevens',track:'Mystery of Love',genre:'indie',moods:['tired','blah'],q:'Sufjan Stevens Mystery of Love'},
+  // jazz
+  {id:'m25',artist:'Miles Davis',track:'Blue in Green',genre:'jazz',moods:['tired','blah','okay'],q:'Miles Davis Blue in Green'},
+  {id:'m26',artist:'John Coltrane',track:'Naima',genre:'jazz',moods:['tired','okay'],q:'John Coltrane Naima'},
+  {id:'m27',artist:'Ella Fitzgerald',track:'Dream a Little Dream',genre:'jazz',moods:['okay','good'],q:'Ella Fitzgerald Dream a Little Dream'},
+  {id:'m28',artist:'Chet Baker',track:'My Funny Valentine',genre:'jazz',moods:['tired','blah'],q:'Chet Baker My Funny Valentine'},
+  // afrobeats
+  {id:'m29',artist:'Burna Boy',track:'Last Last',genre:'afrobeats',moods:['wired','good','glowing'],q:'Burna Boy Last Last'},
+  {id:'m30',artist:'Rema',track:'Calm Down',genre:'afrobeats',moods:['good','glowing'],q:'Rema Calm Down'},
+  {id:'m31',artist:'Tems',track:'Free Mind',genre:'afrobeats',moods:['okay','good'],q:'Tems Free Mind'},
+  {id:'m32',artist:'Wizkid',track:'Essence',genre:'afrobeats',moods:['good','glowing'],q:'Wizkid Essence'},
+  // r&b
+  {id:'m33',artist:'SZA',track:'Snooze',genre:'rnb',moods:['okay','good'],q:'SZA Snooze'},
+  {id:'m34',artist:'Frank Ocean',track:'Pink + White',genre:'rnb',moods:['tired','okay','good'],q:'Frank Ocean Pink White'},
+  {id:'m35',artist:'Daniel Caesar',track:'Best Part',genre:'rnb',moods:['tired','okay','good'],q:'Daniel Caesar Best Part'},
+  {id:'m36',artist:'Summer Walker',track:'Girls Need Love',genre:'rnb',moods:['okay'],q:'Summer Walker Girls Need Love'},
+  // rock
+  {id:'m37',artist:'Fleetwood Mac',track:'Dreams',genre:'rock',moods:['okay','good'],q:'Fleetwood Mac Dreams'},
+  {id:'m38',artist:'Arctic Monkeys',track:'505',genre:'rock',moods:['blah','okay'],q:'Arctic Monkeys 505'},
+  {id:'m39',artist:'Radiohead',track:'No Surprises',genre:'rock',moods:['tired','blah'],q:'Radiohead No Surprises'},
+  {id:'m40',artist:'The Strokes',track:'Reptilia',genre:'rock',moods:['wired','good'],q:'The Strokes Reptilia'},
+  // electronic
+  {id:'m41',artist:'Daft Punk',track:'Something About Us',genre:'electronic',moods:['okay','good'],q:'Daft Punk Something About Us'},
+  {id:'m42',artist:'Four Tet',track:'Two Thousand And Seventeen',genre:'electronic',moods:['okay'],q:'Four Tet Two Thousand And Seventeen'},
+  {id:'m43',artist:'Jamie xx',track:'Gosh',genre:'electronic',moods:['wired','good'],q:'Jamie xx Gosh'},
+  {id:'m44',artist:'Flume',track:'Never Be Like You',genre:'electronic',moods:['okay','good'],q:'Flume Never Be Like You'},
+  // punjabi
+  {id:'m45',artist:'Diljit Dosanjh',track:'Born To Shine',genre:'punjabi',moods:['wired','good','glowing'],q:'Diljit Dosanjh Born To Shine'},
+  {id:'m46',artist:'AP Dhillon',track:'Brown Munde',genre:'punjabi',moods:['wired','good'],q:'AP Dhillon Brown Munde'},
+  {id:'m47',artist:'Karan Aujla',track:'Softly',genre:'punjabi',moods:['okay','good'],q:'Karan Aujla Softly'},
+  {id:'m48',artist:'Sidhu Moose Wala',track:'So High',genre:'punjabi',moods:['wired','good'],q:'Sidhu Moose Wala So High'},
+];
+
+const ACTS = [
+  {id:'a01',name:'20-min walk, no phone',why:'your head needs air, not another feed.',cost:'₹0',time:20,moods:['tired','wired','blah','okay']},
+  {id:'a02',name:'journal for 10 minutes',why:'one page. anything.',cost:'₹0',time:10,moods:['blah','okay','good']},
+  {id:'a03',name:'read one chapter',why:'book, not a tab.',cost:'₹0',time:20,moods:['tired','blah','okay']},
+  {id:'a04',name:'call someone you miss',why:'you keep saying you&#39;ll call.',cost:'₹0',time:15,moods:['blah','okay','good']},
+  {id:'a05',name:'15 min of stretching',why:'your back has opinions.',cost:'₹0',time:15,moods:['tired','wired','blah']},
+  {id:'a06',name:'cold shower',why:'90 seconds, the rest of the day fixed.',cost:'₹0',time:5,moods:['tired','wired','blah']},
+  {id:'a07',name:'organize one drawer',why:'small win. huge dopamine.',cost:'₹0',time:15,moods:['wired','blah','okay']},
+  {id:'a08',name:'cook one thing from scratch',why:'any one thing. your hands remember.',cost:'₹100',time:40,moods:['okay','good']},
+  {id:'a09',name:'listen to one album, fully',why:'no skipping. no scrolling. just the album.',cost:'₹0',time:45,moods:['tired','blah','okay']},
+  {id:'a10',name:'write 3 wins from today',why:'you did more than you remember.',cost:'₹0',time:5,moods:['blah','okay']},
+  {id:'a11',name:'5 min of silence',why:'phone away. just the ceiling.',cost:'₹0',time:5,moods:['tired','wired','blah']},
+  {id:'a12',name:'make chai, drink slowly',why:'no multitasking. just the cup.',cost:'₹10',time:12,moods:['tired','blah','okay']},
+  {id:'a13',name:'sketch something badly',why:'no artist will see it. that&#39;s the point.',cost:'₹0',time:15,moods:['blah','okay','good']},
+  {id:'a14',name:'text a friend first',why:'the one you were waiting for them to message.',cost:'₹0',time:3,moods:['blah','okay','good']},
+  {id:'a15',name:'watch the sunset',why:'7 minutes. phone face down.',cost:'₹0',time:10,moods:['tired','okay','good','glowing']},
+  {id:'a16',name:'clean your desk',why:'future you will feel the difference.',cost:'₹0',time:12,moods:['wired','blah']},
+  {id:'a17',name:'plan tomorrow in 5 min',why:'write 3 things. one must be hard.',cost:'₹0',time:5,moods:['wired','okay']},
+  {id:'a18',name:'learn one new word',why:'any language. actually use it.',cost:'₹0',time:5,moods:['okay','good']},
+  {id:'a19',name:'make a playlist, 10 songs',why:'name it. date it. you&#39;ll come back.',cost:'₹0',time:20,moods:['okay','good']},
+  {id:'a20',name:'press flowers in a book',why:'one tiny stem. open it next month.',cost:'₹0',time:10,moods:['okay','good','glowing']},
+  {id:'a21',name:'20 push-ups, anywhere',why:'done is done.',cost:'₹0',time:5,moods:['wired','good']},
+  {id:'a22',name:'rewatch your favorite scene',why:'not the whole movie. just the one scene.',cost:'₹0',time:10,moods:['tired','blah']},
+  {id:'a23',name:'write to yourself in a year',why:'one paragraph. send-at-future-date.',cost:'₹0',time:15,moods:['okay','good']},
+  {id:'a24',name:'eat in another room',why:'break the autopilot.',cost:'₹0',time:20,moods:['blah','okay']},
+];
+
+const SAYS = [
+  {id:'s01',to:'ma',re:'going home',draft:'ma, booking this weekend — promise. will confirm by friday. miss home.',tone:'warm'},
+  {id:'s02',to:'ma',re:'going home (firmer)',draft:'ma, i&#39;ll come when i can. right now it&#39;s not possible. will call tonight.',tone:'firm'},
+  {id:'s03',to:'friend',re:'can&#39;t make plans',draft:'can&#39;t do tonight — fully fried. next week for sure? pick a day and i&#39;ll be there.',tone:'warm'},
+  {id:'s04',to:'friend',re:'birthday wish, late',draft:'late, but real. hope the day was loud. love you.',tone:'warm'},
+  {id:'s05',to:'boss',re:'need more time',draft:'need one more day on this — want it to be right, not just done. ok to send by eod friday?',tone:'professional'},
+  {id:'s06',to:'boss',re:'pushing back',draft:'thanks for the ask. given current load this&#39;ll push the other deliverable to next week — which should i prioritize?',tone:'firm'},
+  {id:'s07',to:'ex',re:'not meeting',draft:'thanks for asking. i&#39;m good where i am — take care of yourself.',tone:'clear'},
+  {id:'s08',to:'ex',re:'closing',draft:'i wish you well. please don&#39;t text again.',tone:'firm'},
+  {id:'s09',to:'recruiter',re:'interested',draft:'thanks for reaching out — interested. can we do a 15 min call this week? mornings work best.',tone:'professional'},
+  {id:'s10',to:'landlord',re:'maintenance issue',draft:'hi — the [thing] has been broken since [date]. need someone this week. please confirm when.',tone:'firm'},
+  {id:'s11',to:'friend',re:'i was wrong',draft:'thought about it. i was off last night. i&#39;m sorry.',tone:'warm'},
+  {id:'s12',to:'parent',re:'my career choice',draft:'i know this isn&#39;t what you pictured. i need you to trust that i&#39;ve thought about it. let&#39;s talk when we&#39;re both calm.',tone:'firm'},
+  {id:'s13',to:'self',re:'hard day',draft:'today was hard. you did your best with what you had. tomorrow is a new frame.',tone:'warm'},
+  {id:'s14',to:'colleague',re:'sure, can help',draft:'yeah, i can take this. send what you have, i&#39;ll come back by tomorrow.',tone:'warm'},
+  {id:'s15',to:'sister',re:'thanks',draft:'you didn&#39;t have to and you did. thank you. means more than you know.',tone:'warm'},
+];
+
+const WATCH = [
+  {id:'w01',name:'Dil Chahta Hai',why:'the one that gets better every rewatch.',time:183,where:'netflix',moods:['tired','blah','okay','glowing']},
+  {id:'w02',name:'Paddington 2',why:'cinema can be kind. this proves it.',time:103,where:'jiocinema',moods:['tired','blah','okay']},
+  {id:'w03',name:'Everything Everywhere All at Once',why:'two hours, feels like your whole life.',time:139,where:'jiocinema',moods:['wired','okay']},
+  {id:'w04',name:'The Bear · pilot',why:'30 minutes. you&#39;ll want more. that&#39;s the point.',time:30,where:'jiohotstar',moods:['wired','blah','okay']},
+  {id:'w05',name:'3 Idiots',why:'you know every scene. that&#39;s a feature.',time:170,where:'prime video',moods:['tired','blah','okay']},
+  {id:'w06',name:'Spirited Away',why:'bath for your head.',time:125,where:'netflix',moods:['tired','blah','okay']},
+];
+
+const WEAR = [
+  {id:'t01',name:'something black + something comfortable',why:'the never-wrong move.',moods:['tired','blah','okay']},
+  {id:'t02',name:'the one thing you always get compliments on',why:'you know which one. wear it.',moods:['okay','good','glowing']},
+  {id:'t03',name:'white tee + jeans + the earrings',why:'the classic. zero thought. maximum point.',moods:['okay','good']},
+  {id:'t04',name:'kurta + sneakers',why:'the combo you keep meaning to try.',moods:['good','glowing']},
+  {id:'t05',name:'the thing you were scared to wear',why:'today&#39;s the day. nobody is looking that hard.',moods:['good','glowing']},
+  {id:'t06',name:'all neutral + one bold accessory',why:'controlled chaos.',moods:['okay','good']},
+];
+
+/* ========== STATE ========== */
+const DEFAULT_STATE = {
+  setup:false, name:null, diet:null,
+  mood:null, category:null, genre:null, budget:null, timeframe:null,
+  currentPick:null, currentCategory:null,
+  recent:[], log:[], kept:0, vetoed:0, pickNum:0,
+};
+let state = loadState();
+let currentScreen='welcome';
+
+function loadState(){
+  try{
+    const s=localStorage.getItem('wetoes_v1');
+    if(!s)return{...DEFAULT_STATE};
+    return{...DEFAULT_STATE,...JSON.parse(s)};
+  }catch(e){return{...DEFAULT_STATE};}
+}
+function saveState(){
+  try{localStorage.setItem('wetoes_v1',JSON.stringify(state));}catch(e){}
+}
+
+/* ========== HELPERS ========== */
+function esc(s){return String(s).replace(/&(?!#?\w+;)/g,'&amp;').replace(/[<>"]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function pickOne(category,filters){
+  filters=filters||{};
+  let pool;
+  if(category==='eat') pool=FOODS;
+  else if(category==='listen') pool=MUSIC;
+  else if(category==='do') pool=ACTS;
+  else if(category==='say') pool=SAYS;
+  else if(category==='watch') pool=WATCH;
+  else if(category==='wear') pool=WEAR;
+  else pool=FOODS;
+
+  let filtered=pool.filter(item=>{
+    if(category==='eat'){
+      if(state.diet==='veg' && !(item.diet.includes('veg')||item.diet.includes('vegan')))return false;
+      if(state.diet==='vegan' && !item.diet.includes('vegan'))return false;
+    }
+    if(filters.mood && item.moods && !item.moods.includes(filters.mood))return false;
+    if(filters.budget && category==='eat' && item.budget && filters.budget!=='any' && !matchesBudget(item.budget,filters.budget))return false;
+    if(category==='listen' && filters.genre && item.genre!==filters.genre)return false;
+    if(state.recent.includes(item.id))return false;
+    return true;
+  });
+  if(filtered.length===0){
+    // relax: drop budget, mood, recent — but KEEP diet and genre
+    filtered=pool.filter(item=>{
+      if(category==='eat'){
+        if(state.diet==='veg' && !(item.diet.includes('veg')||item.diet.includes('vegan')))return false;
+        if(state.diet==='vegan' && !item.diet.includes('vegan'))return false;
+      }
+      if(category==='listen' && filters.genre && item.genre!==filters.genre)return false;
+      return true;
+    });
+    if(filtered.length===0)filtered=pool;
+  }
+  return filtered[Math.floor(Math.random()*filtered.length)];
+}
+function matchesBudget(itemB,sel){
+  const o=['free','u100','u300','splurge'];
+  return o.indexOf(itemB)<=o.indexOf(sel);
+}
+
+function markRecent(id){
+  state.recent.unshift(id);
+  if(state.recent.length>12)state.recent.pop();
+}
+
+function timeGreeting(){
+  const h=new Date().getHours();
+  if(h<5)return 'late';
+  if(h<12)return 'morning';
+  if(h<17)return 'afternoon';
+  if(h<21)return 'evening';
+  return 'night';
+}
+function clockStr(){
+  const d=new Date();
+  let h=d.getHours(),m=d.getMinutes();
+  const ampm=h>=12?'pm':'am';
+  h=h%12||12;m=m<10?'0'+m:m;
+  return h+':'+m+ampm;
+}
+function dayStr(){
+  return ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
+}
+function isNight(){
+  const h=new Date().getHours();
+  return h>=22||h<6;
+}
+function checkNight(){
+  document.body.classList.toggle('dark',isNight());
+}
+
+/* ========== NAVIGATION ========== */
+function goto(name,opts){
+  opts=opts||{};
+  currentScreen=name;
+  document.getElementById('app').innerHTML=SCREENS[name](opts);
+  bindActions();
+  window.scrollTo(0,0);
+  checkNight();
+  saveState();
+}
+
+function bindActions(){
+  document.querySelectorAll('[data-a]').forEach(el=>{
+    el.addEventListener('click',(e)=>{
+      e.preventDefault();
+      const a=el.dataset.a;
+      const v=el.dataset.v;
+      handle(a,v,el);
+    });
+  });
+}
+
+function handle(a,v){
+  switch(a){
+    case 'start-welcome': goto('diet'); break;
+    case 'set-diet': state.diet=v; state.setup=true; goto(currentScreen==='settings'?'settings':'mood'); break;
+    case 'skip-diet': state.diet='everything'; state.setup=true; goto('mood'); break;
+    case 'pick-mood': state.mood=v; goto('context'); break;
+    case 'pick-cat': state.category=v; if(v==='listen'){goto('music');}else{servePick();} break;
+    case 'pick-genre': state.genre=v; servePick(); break;
+    case 'surprise-genre': state.genre=null; servePick(); break;
+    case 'pick-time': state.timeframe=v; break;
+    case 'pick-budget': state.budget=(state.budget===v?null:v); goto('context'); break;
+    case 'serve-now': servePick(); break;
+    case 'veto': vetoCurrent(); break;
+    case 'yes': acceptCurrent(); break;
+    case 'nav-hub': goto('hub'); break;
+    case 'nav-trust': goto('trust'); break;
+    case 'nav-mood': clearContext(); goto('mood'); break;
+    case 'undo-yes': undoAccept(); break;
+    case 'nav-welcome': goto('welcome'); break;
+    case 'nav-settings': goto('settings'); break;
+    case 'back-one': history.length>1?history.back():goto('mood'); break;
+    case 'reset-all': if(confirm('reset everything? this clears your diet, name, and history.')){state={...DEFAULT_STATE};saveState();goto('welcome');} break;
+    case 'save-name': state.name=document.getElementById('name-input').value.trim()||null; saveState(); goto('mood'); break;
+    case 'play-track': if(v)window.open('https://open.spotify.com/search/'+encodeURIComponent(v),'_blank'); break;
+    case 'cycle-tone': cycleTone(); break;
+  }
+}
+
+function clearContext(){state.mood=null;state.category=null;state.genre=null;state.currentPick=null;}
+
+function servePick(){
+  state.pickNum++;
+  const pick=pickOne(state.category,{mood:state.mood,genre:state.genre,budget:state.budget||'any'});
+  state.currentPick=pick;
+  markRecent(pick.id);
+  goto('pick');
+}
+
+function vetoCurrent(){
+  if(!state.currentPick)return;
+  state.vetoed++;
+  const nm=state.currentPick.name||state.currentPick.track||(state.currentPick.draft?state.currentPick.draft.slice(0,60):'untitled');
+  state.log.unshift({id:state.currentPick.id,name:nm,cat:state.category,action:'vetoed',ts:Date.now()});
+  if(state.log.length>80)state.log.pop();
+  servePick();
+}
+
+function acceptCurrent(){
+  if(!state.currentPick)return;
+  state.kept++;
+  const nm=state.currentPick.name||state.currentPick.track||(state.currentPick.draft?state.currentPick.draft.slice(0,60):'untitled');
+  state.log.unshift({id:state.currentPick.id,name:nm,cat:state.category,action:'kept',ts:Date.now()});
+  if(state.log.length>80)state.log.pop();
+  state.canUndo=true;
+  goto('yes');
+}
+function undoAccept(){
+  if(state.canUndo){
+    state.kept=Math.max(0,state.kept-1);
+    state.log.shift();
+    state.canUndo=false;
+  }
+  clearContext();
+  goto('mood');
+}
+
+function cycleTone(){
+  // For say category: swap to next draft matching same recipient
+  if(state.category!=='say'||!state.currentPick)return;
+  const same=SAYS.filter(s=>s.to===state.currentPick.to&&s.id!==state.currentPick.id);
+  if(same.length===0)return;
+  state.currentPick=same[Math.floor(Math.random()*same.length)];
+  goto('pick');
+}
+
+/* ========== SCREEN TEMPLATES ========== */
+const SCREENS={};
+
+SCREENS.welcome=()=>`
+<div class="screen active" style="padding-top:28px">
+  <div class="topbar">
+    <span class="mono" style="font-size:11px;font-weight:600;color:#1A1613">${clockStr()}</span>
+    <span class="mono" style="font-size:11px;color:#1A1613;letter-spacing:0.4em;opacity:0.5">●●●</span>
+  </div>
+  <div class="blob" style="top:-70px;right:-70px;width:240px;height:240px;background:#E8B4A5;opacity:0.42"></div>
+  <div class="blob" style="top:320px;left:-90px;width:220px;height:220px;background:#F2D97F;opacity:0.32"></div>
+  <div class="blob" style="bottom:-40px;right:-40px;width:200px;height:200px;background:#B8BE94;opacity:0.28"></div>
+  <div style="position:absolute;top:36px;right:8px;width:58px;height:58px;border:1.2px solid #E8402C;border-radius:50%;transform:rotate(-12deg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:7px;color:#E8402C;letter-spacing:0.18em;text-align:center;line-height:1.3;font-weight:700;z-index:3">
+    <div>EST.</div><div class="serif" style="font-size:14px;letter-spacing:0;line-height:1;font-weight:400">2026</div><div>MUMBAI</div>
+  </div>
+  <div class="spine">THE ANTI-RECOMMENDER &middot; ONE PICK NOT TEN</div>
+
+  <div class="sep"></div>
+
+  <div style="position:relative;z-index:2;padding-left:24px">
+    <div class="serif" style="font-size:18px;color:#5C4F42;margin-bottom:0">a love letter to —</div>
+    <h1 class="welcome-hero">wetoes<span class="red">.</span></h1>
+    <svg width="130" height="12" viewBox="0 0 130 12" style="margin:4px 0 0 6px;display:block" aria-hidden="true"><path d="M2 8 Q 30 2, 64 6 T 128 5" stroke="#1A1613" stroke-width="1.6" fill="none" stroke-linecap="round" opacity="0.5"/></svg>
+
+    <div style="margin-top:20px;font-size:16px;line-height:1.5;color:#5C4F42;max-width:280px">
+      we hand you <span style="color:#1A1613;font-weight:600">one</span> thing.<br>
+      you <span class="serif red" style="font-weight:600">veto</span> or you commit. that&rsquo;s the whole app.
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <div style="position:relative;z-index:2;padding-left:14px;border-left:2px solid #E8402C;margin-bottom:28px">
+    <p class="serif" style="font-size:22px;line-height:1.25;letter-spacing:-0.015em">choosing dinner shouldn&rsquo;t<br>be a whole project.</p>
+    <div class="mono" style="font-size:9px;letter-spacing:0.24em;color:#5C4F42;font-weight:700;margin-top:8px">— US, LITERALLY EVERY NIGHT</div>
+  </div>
+
+  <button class="cta" data-a="start-welcome" style="position:relative;z-index:2">
+    <span>start saying no</span><span class="arrow">↗</span>
+  </button>
+  <div class="footmeta">no ads &middot; no accounts &middot; no selling your taste</div>
+</div>
+`;
+
+SCREENS.diet=()=>`
+<div class="screen active">
+  <div class="topbar">
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">·  CH.01  ·  SETUP  ·</span>
+  </div>
+  <div class="blob" style="top:220px;right:-90px;width:220px;height:220px;background:#B8BE94;opacity:0.3"></div>
+
+  <div style="margin-top:36px;display:flex;align-items:baseline;gap:14px;position:relative;z-index:2">
+    <span class="mono red" style="font-size:11px;letter-spacing:0.3em;font-weight:700">§ ONE</span>
+    <span class="mono muted" style="font-size:10px;letter-spacing:0.24em;font-weight:600">OF TWO &middot; FOREVER</span>
+  </div>
+  <div style="position:relative;z-index:2">
+    <h1 class="hero" style="margin-top:18px;font-size:72px">what do<br>you&nbsp;<span class="red">eat?</span></h1>
+    <p class="muted" style="font-size:14px;margin-top:20px;line-height:1.55;max-width:300px">so i never hand you a pick you&rsquo;d have to throw back.</p>
+  </div>
+
+  <div style="margin-top:34px;display:flex;flex-direction:column;gap:10px">
+    <button class="dietopt" data-a="set-diet" data-v="veg" style="display:flex;justify-content:space-between;align-items:center;padding:20px 22px;background:#FFFCF5;border:1px solid rgba(26,22,19,0.1);border-radius:18px">
+      <div style="display:flex;align-items:center;gap:18px">
+        <span class="serif" style="font-size:48px;color:#B8BE94;line-height:0.85">V</span>
+        <div><div class="serif" style="font-size:26px">veg</div><div style="font-size:12px;color:#5C4F42;margin-top:4px">no meat, no fish, no egg</div></div>
+      </div>
+      <div style="width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(26,22,19,0.2)"></div>
+    </button>
+    <button class="dietopt" data-a="set-diet" data-v="vegan" style="display:flex;justify-content:space-between;align-items:center;padding:20px 22px;background:#FFFCF5;border:1px solid rgba(26,22,19,0.1);border-radius:18px">
+      <div style="display:flex;align-items:center;gap:18px">
+        <span class="serif" style="font-size:48px;color:#7E8C5F;line-height:0.85">V</span>
+        <div><div class="serif" style="font-size:26px">vegan</div><div style="font-size:12px;color:#5C4F42;margin-top:4px">plants only. we&rsquo;ll check labels.</div></div>
+      </div>
+      <div style="width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(26,22,19,0.2)"></div>
+    </button>
+    <button class="dietopt" data-a="set-diet" data-v="everything" style="display:flex;justify-content:space-between;align-items:center;padding:20px 22px;background:#1A1613;color:#F5EDDF;border-radius:18px;box-shadow:0 2px 0 rgba(26,22,19,0.08), 0 18px 36px -16px rgba(26,22,19,0.45)">
+      <div style="display:flex;align-items:center;gap:18px">
+        <span class="serif" style="font-size:48px;color:#E8B4A5;line-height:0.85">E</span>
+        <div><div class="serif" style="font-size:26px">everything</div><div style="font-size:12px;color:rgba(245,237,223,0.72);margin-top:4px">veg, chicken, fish, mutton — all</div></div>
+      </div>
+      <div style="width:26px;height:26px;border-radius:50%;background:#F5EDDF;display:flex;align-items:center;justify-content:center">
+        <svg width="13" height="10" viewBox="0 0 14 10"><path d="M1 5 L5 9 L13 1" stroke="#1A1613" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </button>
+  </div>
+
+  <div class="sep"></div>
+  <div style="padding-top:14px;border-top:1px solid rgba(26,22,19,0.1);text-align:center">
+    <div class="serif" style="font-size:14px;line-height:1.5">change it anytime. we won&rsquo;t make it hard.</div>
+    <div class="mono muted" style="font-size:9px;letter-spacing:0.26em;font-weight:700;margin-top:8px">— SETTINGS → YOU</div>
+  </div>
+</div>
+`;
+
+SCREENS.mood=()=>{
+  const name=state.name?state.name:'friend';
+  return `
+<div class="screen active">
+  <div class="topbar">
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">·  ${dayStr()} &middot; ${clockStr()}  ·</span>
+  </div>
+  <div style="margin-top:28px;display:flex;align-items:baseline;gap:10px">
+    <span class="mono red" style="font-size:11px;letter-spacing:0.3em;font-weight:700">§ TONIGHT</span>
+    <span class="serif muted" style="font-size:16px">hey ${esc(name)} —</span>
+  </div>
+  <div class="mt-m">
+    <h1 class="hero" style="font-size:80px">how are<br>you, <span class="red">really</span>?</h1>
+  </div>
+
+  <div class="moodgrid mt-xl">
+    <button class="moodchip m1" data-a="pick-mood" data-v="tired"><span class="num">01</span><span>tired</span></button>
+    <button class="moodchip m2" data-a="pick-mood" data-v="wired"><span class="num">02</span><span>wired</span></button>
+    <button class="moodchip m3" data-a="pick-mood" data-v="blah"><span class="num">03</span><span>blah</span></button>
+    <button class="moodchip m4" data-a="pick-mood" data-v="okay"><span class="num">04</span><span>okay</span></button>
+    <button class="moodchip m5" data-a="pick-mood" data-v="good"><span class="num">05</span><span>good</span></button>
+    <button class="moodchip m6" data-a="pick-mood" data-v="glowing"><span class="num">06</span><span>glowing</span></button>
+  </div>
+
+  <div class="sep"></div>
+
+  <div style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(26,22,19,0.1);display:flex;justify-content:space-between;align-items:center" class="footmeta">
+    <button data-a="nav-hub" style="color:inherit;font-family:inherit;font-size:9px;letter-spacing:0.22em;font-weight:700">⊞ hub</button>
+    <button data-a="nav-trust" style="color:inherit;font-family:inherit;font-size:9px;letter-spacing:0.22em;font-weight:700">⎙ memory</button>
+    <button data-a="nav-settings" style="color:inherit;font-family:inherit;font-size:9px;letter-spacing:0.22em;font-weight:700">⚙ you</button>
+  </div>
+</div>
+`;
+};
+
+SCREENS.context=()=>{
+  const dietLabel=state.diet==='veg'?'veg':state.diet==='vegan'?'vegan':'all';
+  const dietClass=state.diet==='veg'||state.diet==='vegan'?'moss':'paper';
+  const moodClass=({tired:'taupe',wired:'butter',blah:'paper',okay:'paper',good:'moss',glowing:'blush'})[state.mood]||'paper';
+  return `
+<div class="screen active">
+  <div class="topbar">
+    <button class="backbtn" data-a="nav-mood"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M8 2 L3 6 L8 10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> back</button>
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">STEP 2</span>
+  </div>
+
+  <div class="mt-m chips">
+    <span class="mono eyebrow" style="margin-right:4px">YOU:</span>
+    <div class="chip ${moodClass}"><span class="dot"></span>${state.mood}</div>
+    <div class="chip ${dietClass}"><span class="dot"></span>${dietLabel}</div>
+  </div>
+
+  <h1 class="hero" style="margin-top:18px;font-size:60px">what&rsquo;s<br>the&nbsp;<span class="red">ask?</span></h1>
+
+  <div class="mt-l">
+    <div class="eyebrow" style="margin-bottom:12px">§ PICK ME SOMETHING TO</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="pill" data-a="pick-cat" data-v="eat">eat</button>
+      <button class="pill" data-a="pick-cat" data-v="watch">watch</button>
+      <button class="pill" data-a="pick-cat" data-v="listen">listen to</button>
+      <button class="pill" data-a="pick-cat" data-v="do">do</button>
+      <button class="pill" data-a="pick-cat" data-v="wear">wear</button>
+      <button class="pill" data-a="pick-cat" data-v="say">say</button>
+    </div>
+  </div>
+
+  <div class="mt-m">
+    <div class="eyebrow" style="margin-bottom:12px">§ BUDGET</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="pill mono ${state.budget==='free'?'active':''}" data-a="pick-budget" data-v="free">free</button>
+      <button class="pill mono ${state.budget==='u100'?'active':''}" data-a="pick-budget" data-v="u100">&lt; ₹100</button>
+      <button class="pill mono ${state.budget==='u300'?'active':''}" data-a="pick-budget" data-v="u300">&lt; ₹300</button>
+      <button class="pill ${state.budget==='splurge'?'active':''}" data-a="pick-budget" data-v="splurge">treat me</button>
+    </div>
+    <div class="muted" style="font-size:11px;margin-top:8px;font-style:italic">— tap a category above. we pick one.</div>
+  </div>
+
+  <div class="sep"></div>
+</div>
+`;
+};
+
+SCREENS.music=()=>`
+<div class="screen active">
+  <div class="topbar">
+    <button class="backbtn" data-a="back-one"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M8 2 L3 6 L8 10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> back</button>
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">TO LISTEN</span>
+  </div>
+  <div class="blob" style="top:220px;right:-80px;width:200px;height:200px;background:#F2D97F;opacity:0.32"></div>
+  <div class="blob" style="bottom:120px;left:-70px;width:170px;height:170px;background:#E8B4A5;opacity:0.28"></div>
+
+  <div class="mt-m chips">
+    <span class="eyebrow" style="margin-right:2px">YOU:</span>
+    <div class="chip butter"><span class="dot"></span>${state.mood||'any'}</div>
+  </div>
+
+  <h1 class="hero mt-s" style="font-size:66px">what&rsquo;s<br>the <span class="red">vibe?</span></h1>
+  <p class="serif muted" style="margin-top:14px;font-size:15px;max-width:270px;line-height:1.4">tap one. a song, a vibe — i&rsquo;ll read the room and hand you one.</p>
+
+  <div class="tagcloud mt-l">
+    <button class="genre a" data-a="pick-genre" data-v="kpop">k-pop</button>
+    <button class="genre d" data-a="pick-genre" data-v="hiphop">hip hop</button>
+    <button class="genre" data-a="pick-genre" data-v="classical">classical</button>
+    <button class="genre c" data-a="pick-genre" data-v="lofi">lofi</button>
+    <button class="genre b" data-a="pick-genre" data-v="bollywood">bollywood</button>
+    <button class="genre" data-a="pick-genre" data-v="indie">indie</button>
+    <button class="genre e" data-a="pick-genre" data-v="jazz">jazz</button>
+    <button class="genre f" data-a="pick-genre" data-v="afrobeats">afrobeats</button>
+    <button class="genre" data-a="pick-genre" data-v="rnb">r&amp;b</button>
+    <button class="genre" data-a="pick-genre" data-v="rock">rock</button>
+    <button class="genre" data-a="pick-genre" data-v="electronic">electronic</button>
+    <button class="genre" data-a="pick-genre" data-v="punjabi">punjabi</button>
+  </div>
+
+  <div class="sep"></div>
+
+  <button data-a="surprise-genre" style="display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:transparent;color:inherit;border-radius:18px;border:1.5px dashed rgba(26,22,19,0.3);margin-top:16px">
+    <div>
+      <div class="serif" style="font-size:22px;line-height:1">idk, surprise me.</div>
+      <div class="mono muted" style="font-size:10px;margin-top:4px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600">reads the room · picks one</div>
+    </div>
+    <span class="serif" style="font-size:24px">↝</span>
+  </button>
+</div>
+`;
+
+SCREENS.pick=()=>{
+  const p=state.currentPick;
+  if(!p){return SCREENS.mood();}
+  const cat=state.category;
+
+  // meta rows
+  let metaRows='';
+  let title=p.name||p.track;
+  let why=p.why||'';
+  if(cat==='eat'){
+    metaRows=`
+      <div class="row"><span class="k">WHERE</span><span class="v">${esc(p.where)}</span></div>
+      <div class="row"><span class="k">COST</span><span class="v mono">${esc(p.cost)}</span></div>
+      <div class="row"><span class="k">ARRIVES</span><span class="v">${p.time} min · swiggy</span></div>`;
+  } else if(cat==='listen'){
+    title=p.track;
+    why=`by ${esc(p.artist)}. ${p.genre} · matches ${p.moods.join(', ')}.`;
+    metaRows=`
+      <div class="row"><span class="k">ARTIST</span><span class="v">${esc(p.artist)}</span></div>
+      <div class="row"><span class="k">GENRE</span><span class="v">${esc(p.genre)}</span></div>
+      <div class="row"><span class="k">PLAY</span><button class="v" data-a="play-track" data-v="${esc(p.q)}" style="text-decoration:underline;text-underline-offset:3px">open in spotify →</button></div>`;
+  } else if(cat==='do'){
+    metaRows=`
+      <div class="row"><span class="k">COST</span><span class="v mono">${esc(p.cost)}</span></div>
+      <div class="row"><span class="k">TIME</span><span class="v mono">${p.time} min</span></div>`;
+  } else if(cat==='say'){
+    title=p.draft;
+    why='';
+    metaRows=`
+      <div class="row"><span class="k">TO</span><span class="v">${esc(p.to)}</span></div>
+      <div class="row"><span class="k">RE</span><span class="v">${esc(p.re)}</span></div>
+      <div class="row"><span class="k">TONE</span><span class="v">${esc(p.tone)}</span></div>`;
+  } else if(cat==='watch'){
+    metaRows=`
+      <div class="row"><span class="k">WHERE</span><span class="v">${esc(p.where)}</span></div>
+      <div class="row"><span class="k">TIME</span><span class="v mono">${p.time} min</span></div>`;
+  } else if(cat==='wear'){
+    metaRows=``;
+  }
+
+  // Set stamp text and color
+  const sealColor=isNight()?'#F2D97F':'#E8402C';
+  const stampLabel=cat==='say'?'DRAFT':'PICK';
+  const titleFontSize=cat==='say'?36:cat==='listen'?60:68;
+  const titleLineHeight=cat==='say'?1.15:0.85;
+
+  return `
+<div class="screen active">
+  <div class="topbar">
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">${isNight()?'·  '+clockStr()+'  ·':'·  YOUR '+stampLabel+'  ·'}</span>
+  </div>
+  <div class="blob" style="top:110px;right:-90px;width:260px;height:260px;background:${isNight()?'#F2D97F':'#E8B4A5'};opacity:${isNight()?'0.14':'0.45'}"></div>
+
+  <div class="chips" style="margin-top:14px">
+    ${state.mood?`<span class="chip paper">${state.mood}</span>`:''}
+    ${cat==='eat'&&state.diet?`<span class="chip moss">${state.diet==='everything'?'all':state.diet}</span>`:''}
+    <span class="chip paper">to ${cat==='listen'?'listen':cat==='eat'?'eat':cat==='do'?'do':cat==='say'?'say':cat==='watch'?'watch':'wear'}</span>
+    ${state.budget&&cat==='eat'?`<span class="chip paper mono">${state.budget==='free'?'free':state.budget==='u100'?'< ₹100':state.budget==='u300'?'< ₹300':'splurge'}</span>`:''}
+  </div>
+
+  <div class="card mt-m">
+    <div class="seal" style="border-color:${sealColor};color:${sealColor}">
+      <div>${stampLabel}</div>
+      <div class="num">№ ${String(state.pickNum).padStart(3,'0')}</div>
+      <div>${clockStr().toUpperCase().replace('M','M')}</div>
+    </div>
+    <div class="eyebrow red" style="color:${sealColor}">${cat==='say'?'§ ONE DRAFT · NOT TEN':'§ ONE PICK · NOT TEN'}</div>
+    <h1 class="hero" style="margin-top:14px;font-size:${titleFontSize}px;line-height:${titleLineHeight};color:inherit">${cat==='say'?'&ldquo;'+esc(title)+'&rdquo;':esc(title)}${cat!=='say'?'<span class="red">.</span>':''}</h1>
+    ${why?`<p style="margin-top:16px;font-size:14px;line-height:1.55">${why}</p>`:''}
+    ${metaRows?`<div class="meta">${metaRows}</div>`:''}
+    ${cat==='say'?`<div style="margin-top:14px;text-align:center"><button data-a="cycle-tone" class="mono" style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;font-weight:700;color:${sealColor};text-decoration:underline;text-underline-offset:3px">try a different tone</button></div>`:''}
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="actions">
+    <button class="btn-veto" data-a="veto">veto</button>
+    <button class="btn-yes" data-a="yes">${cat==='say'?'send this':'yes, that'}<span class="a">↗</span></button>
+  </div>
+
+  <div class="footmeta" style="margin-top:14px">veto #${state.vetoed} this week &middot; respectful</div>
+</div>
+`;
+};
+
+SCREENS.yes=()=>{
+  const p=state.currentPick;
+  const title=p?(p.name||p.track||'that'):'that';
+  const category=state.category;
+  const name=state.name||'friend';
+  const subtitle=category==='say'?'sent. deep breath.':category==='eat'?`ordering ${esc(title)}.`:category==='listen'?`playing ${esc(title)}.`:category==='do'?`go do it.`:`noted.`;
+  const meta=category==='eat'&&p?`${esc(p.where)} &middot; ${esc(p.cost)} &middot; ${p.time} min`:category==='listen'&&p?`by ${esc(p.artist)} &middot; ${esc(p.genre)}`:category==='do'&&p?`${p.time} min &middot; ${esc(p.cost||'free')}`:'';
+
+  // undo countdown
+  setTimeout(()=>{const el=document.getElementById('undo-n');if(el){let n=5;const t=setInterval(()=>{n--;if(n<=0){clearInterval(t);goto('mood');return;}el.textContent='('+n+'s)';},1000);}},50);
+
+  return `
+<div class="screen active yes-screen">
+  <div class="sun"></div>
+  <div class="topbar" style="position:relative;z-index:2">
+    <span class="wordmark" style="color:#1A1613">wetoes<span style="color:#E8402C">.</span></span>
+    <div class="locked">
+      <div>LOCKED</div><div class="word">in<span style="color:#E8402C">.</span></div><div>${clockStr().replace(/[ap]m/,x=>x.toUpperCase())}</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <div style="text-align:center;position:relative;z-index:2">
+    <div class="mono" style="font-size:10px;letter-spacing:0.4em;font-weight:700;margin-bottom:20px;opacity:0.6;color:#1A1613">§ YOUR CALL</div>
+    <h1 class="hero-yes">yes,<br>that<span style="color:#E8402C">.</span></h1>
+    <svg width="220" height="14" viewBox="0 0 220 14" style="margin:16px auto 0;display:block"><path d="M4 9 Q 50 2, 110 7 T 216 6" stroke="#1A1613" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.55"/></svg>
+  </div>
+
+  <div class="sep"></div>
+
+  <div style="background:#FFFCF5;border-radius:20px;padding:18px 20px;border:1px solid rgba(26,22,19,0.08);margin-bottom:14px;box-shadow:0 2px 0 rgba(26,22,19,0.04), 0 20px 36px -18px rgba(26,22,19,0.18);position:relative;z-index:2">
+    <div class="mono" style="font-size:9px;letter-spacing:0.28em;color:#E8402C;font-weight:700;text-transform:uppercase;margin-bottom:8px">§ ${subtitle}</div>
+    ${p?`<div class="serif" style="font-size:24px;color:#1A1613;line-height:1.1;margin-top:4px">${category==='say'?'&ldquo;'+esc(p.draft).slice(0,70)+(p.draft.length>70?'…':'')+'&rdquo;':esc(title)}</div>`:''}
+    ${meta?`<div style="margin-top:6px;font-size:12px;color:#5C4F42">${meta}</div>`:''}
+  </div>
+
+  <button class="undo" data-a="undo-yes" style="position:relative;z-index:2">
+    <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 3 L3 6 L6 6 M3 6 A 4 4 0 1 0 5 2.5" stroke="#1A1613" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    undo <span class="n" id="undo-n">(5s)</span>
+  </button>
+
+  <div style="text-align:center;margin-top:16px;font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;color:#1A1613;position:relative;z-index:2">have a good one, ${esc(name)}. <span style="color:#E8402C">↝</span></div>
+</div>
+`;
+};
+
+SCREENS.hub=()=>`
+<div class="screen active">
+  <div class="topbar">
+    <button class="backbtn" data-a="nav-mood"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M8 2 L3 6 L8 10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> back</button>
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">·  WHAT CAN I PICK?  ·</span>
+  </div>
+
+  <div class="mt-m">
+    <span class="eyebrow red">§ THE MENU</span>
+    <h1 class="hero" style="margin-top:10px;font-size:48px">pick me<br>something<br>to&hellip;</h1>
+  </div>
+
+  <div class="catlist mt-l">
+    <button class="cat" data-a="pick-cat" data-v="eat" style="background:#1A1613;color:#F5EDDF;box-shadow:0 2px 0 rgba(26,22,19,0.08), 0 20px 36px -16px rgba(26,22,19,0.4)">
+      <div class="inner">
+        <svg width="30" height="30" viewBox="0 0 30 30"><path d="M4 13 L26 13 M4 13 Q 4 24, 15 24 Q 26 24, 26 13" stroke="#F2D97F" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 8 Q 13 4, 15 8 M17 6 Q 18 3, 19 6" stroke="#F2D97F" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/></svg>
+        <div class="label"><span class="num" style="opacity:0.6">01</span><span class="name" style="font-size:30px">eat</span><span class="last" style="color:rgba(245,237,223,0.72)">${lastFor('eat')}</span></div>
+      </div>
+      <span class="arr" style="opacity:0.85">↗</span>
+    </button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+      <button class="cat" data-a="pick-cat" data-v="watch" style="background:#E8B4A5;flex-direction:column;align-items:flex-start;min-height:118px">
+        <svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="#1A1613" stroke-width="1.6" fill="none"/><path d="M10 9 L15 12 L10 15 Z" fill="#1A1613"/></svg>
+        <div class="label" style="margin-top:auto"><span class="num" style="color:#5C4F42">02</span><span class="name">watch</span><span class="last" style="color:#5C4F42">${lastFor('watch')}</span></div>
+      </button>
+      <button class="cat" data-a="pick-cat" data-v="listen" style="background:#F2D97F;flex-direction:column;align-items:flex-start;min-height:118px">
+        <svg width="22" height="22" viewBox="0 0 24 24"><path d="M9 17 L9 5 L19 3 L19 15" stroke="#1A1613" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="17" r="2.5" fill="#1A1613"/><circle cx="16.5" cy="15" r="2.5" fill="#1A1613"/></svg>
+        <div class="label" style="margin-top:auto"><span class="num" style="color:#5C4F42">03</span><span class="name">listen</span><span class="last" style="color:#5C4F42">${lastFor('listen')}</span></div>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+      <button class="cat" data-a="pick-cat" data-v="do" style="background:#B8BE94;flex-direction:column;align-items:flex-start;min-height:118px">
+        <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="8" cy="16" r="3.5" stroke="#1A1613" stroke-width="1.6" fill="none"/><path d="M10.5 13.5 L19 5 M13 5 L19 5 L19 11" stroke="#1A1613" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="label" style="margin-top:auto"><span class="num" style="color:#3F4A2F">04</span><span class="name">do</span><span class="last" style="color:#3F4A2F">${lastFor('do')}</span></div>
+      </button>
+      <button class="cat" data-a="pick-cat" data-v="wear" style="background:#D4CBB8;flex-direction:column;align-items:flex-start;min-height:118px">
+        <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 9 L4 17 L20 17 L12 9 Z" stroke="#1A1613" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 9 Q 12 5, 15 5" stroke="#1A1613" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+        <div class="label" style="margin-top:auto"><span class="num" style="color:#5C4F42">05</span><span class="name">wear</span><span class="last" style="color:#5C4F42">${lastFor('wear')}</span></div>
+      </button>
+    </div>
+    <button class="cat" data-a="pick-cat" data-v="say" style="background:#FFFCF5;border:1px solid rgba(26,22,19,0.1)">
+      <div class="inner">
+        <svg width="30" height="30" viewBox="0 0 30 30"><path d="M4 7 L26 7 L26 20 L13 20 L7 25 L7 20 L4 20 Z" stroke="#1A1613" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="13.5" r="1.2" fill="#1A1613"/><circle cx="15" cy="13.5" r="1.2" fill="#1A1613"/><circle cx="19" cy="13.5" r="1.2" fill="#1A1613"/></svg>
+        <div class="label"><span class="num">06</span><span class="name">say</span><span class="last">${lastFor('say')}</span></div>
+      </div>
+      <span class="arr">↗</span>
+    </button>
+  </div>
+</div>
+`;
+
+function lastFor(cat){
+  const row=state.log.find(l=>l.cat===cat);
+  if(!row)return 'never tried · pick one';
+  return esc(row.name)+' · '+(row.action==='kept'?'kept':'vetoed');
+}
+
+SCREENS.trust=()=>{
+  const total=state.kept+state.vetoed;
+  const dots=state.log.slice(0,24).reverse().map(l=>`<span class="d ${l.action==='kept'?'k':'v'}"></span>`).join('');
+  const rows=state.log.slice(0,8).map(l=>`
+    <div class="logrow">
+      <div><div class="name">${esc(l.name)}</div><div class="when">${timeAgo(l.ts)} &middot; ${esc(l.cat)}</div></div>
+      <span class="tag ${l.action}">${l.action}</span>
+    </div>`).join('');
+  return `
+<div class="screen active">
+  <div class="topbar">
+    <button class="backbtn" data-a="nav-mood"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M8 2 L3 6 L8 10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> back</button>
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">·  MEMORY  ·</span>
+  </div>
+
+  <div class="card mt-m">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div class="eyebrow">§ THE HONEST COUNT</div>
+      <div class="mono muted" style="font-size:10px;font-weight:700">${total} TOTAL</div>
+    </div>
+    <div class="stat-hero mt-s">
+      <span class="big">${state.kept}</span>
+      <div><div class="lbl" style="color:#7E8C5F">kept</div><div class="mono muted" style="font-size:9px;letter-spacing:0.1em">${total?Math.round(state.kept/total*100):0}% hit rate</div></div>
+    </div>
+    <div class="stat-hero" style="margin-top:4px"><span class="big red">${state.vetoed}</span><span class="lbl red" style="font-size:20px">vetoed</span></div>
+    ${total?`<div class="dots"><span class="mono muted" style="font-size:9px;letter-spacing:0.14em;font-weight:700;margin-right:6px">${total}→</span>${dots}</div>`:''}
+    <p class="serif" style="margin-top:14px;font-size:16px;line-height:1.4">saying no is how i learn your <span style="color:#7E8C5F;font-weight:600">yes</span>.</p>
+  </div>
+
+  ${rows?`
+  <div class="mt-m">
+    <div class="eyebrow red">§ RECENT</div>
+    <div style="margin-top:8px">${rows}</div>
+  </div>`:`<p class="muted serif" style="margin-top:28px;text-align:center;font-size:18px">no picks yet. go answer the question.</p>`}
+
+  <div class="sep"></div>
+  <div class="footmeta">no history is sold &middot; ever</div>
+</div>
+`;
+};
+
+SCREENS.settings=()=>`
+<div class="screen active">
+  <div class="topbar">
+    <button class="backbtn" data-a="nav-mood"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M8 2 L3 6 L8 10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> back</button>
+    <span class="wordmark">wetoes<span class="dot">.</span></span>
+    <span class="topmeta">·  YOU  ·</span>
+  </div>
+
+  <h1 class="hero mt-m" style="font-size:60px">you<span class="red">.</span></h1>
+
+  <div class="mt-l">
+    <div class="eyebrow" style="margin-bottom:10px">§ YOUR NAME (OPTIONAL)</div>
+    <input id="name-input" type="text" value="${esc(state.name||'')}" placeholder="what do i call you?" style="width:100%;padding:16px 18px;border-radius:14px;border:1px solid rgba(26,22,19,0.15);background:#FFFCF5;font-family:'Instrument Serif',serif;font-style:italic;font-size:18px;color:#1A1613" />
+    <button class="pill mono mt-s" data-a="save-name" style="background:#1A1613;color:#F5EDDF;border-color:#1A1613">save name</button>
+  </div>
+
+  <div class="mt-l">
+    <div class="eyebrow" style="margin-bottom:10px">§ YOUR DIET</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="pill ${state.diet==='veg'?'active':''}" data-a="set-diet" data-v="veg">veg</button>
+      <button class="pill ${state.diet==='vegan'?'active':''}" data-a="set-diet" data-v="vegan">vegan</button>
+      <button class="pill ${state.diet==='everything'?'active':''}" data-a="set-diet" data-v="everything">everything</button>
+    </div>
+    <div class="muted" style="font-size:12px;margin-top:8px;font-style:italic">current: <strong>${esc(state.diet||'not set')}</strong></div>
+  </div>
+
+  <div class="sep"></div>
+
+  <div class="mt-l" style="padding-top:14px;border-top:1px solid rgba(26,22,19,0.1)">
+    <button class="pill mono" data-a="reset-all" style="background:transparent;color:#E8402C;border-color:#E8402C">reset everything</button>
+    <div class="muted" style="font-size:11px;margin-top:8px;font-style:italic">removes your diet, name, and veto history. local only.</div>
+  </div>
+
+  <div class="footmeta mt-m">v1 &middot; local only &middot; no network</div>
+</div>
+`;
+
+function timeAgo(ts){
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return 'just now';
+  if(s<3600)return Math.floor(s/60)+'m ago';
+  if(s<86400)return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+
+/* ========== BOOT ========== */
+checkNight();
+setInterval(checkNight,60000);
+if(!state.setup) goto('welcome');
+else goto('mood');
+
+// install hint
+if('serviceWorker' in navigator){/* skip SW for v1 */}
+</script>
+</body>
+</html>
+
+</body></html>
