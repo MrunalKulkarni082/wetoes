@@ -1,0 +1,1329 @@
+[
+ {
+  "id": "w07",
+  "category": "watch",
+  "title": "Zindagi Na Milegi Dobara",
+  "why": "three friends, one road trip, zero regrets.",
+  "moods": [
+   "blah",
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "data": {
+   "time": 155,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w08",
+  "category": "watch",
+  "title": "Queen",
+  "why": "a solo trip that fixes more than it should.",
+  "moods": [
+   "blah",
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 146,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w09",
+  "category": "watch",
+  "title": "Panchayat · episode 1",
+  "why": "slow, kind, very funny. 30 minutes.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 30,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w10",
+  "category": "watch",
+  "title": "Gullak · episode 1",
+  "why": "small-town family. feels like home.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 30,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w11",
+  "category": "watch",
+  "title": "Kumbalangi Nights",
+  "why": "four brothers, one house, quietly perfect.",
+  "moods": [
+   "blah",
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 135,
+   "lang": "malayalam"
+  }
+ },
+ {
+  "id": "w12",
+  "category": "watch",
+  "title": "Premam",
+  "why": "three loves, one guy. the songs stay.",
+  "moods": [
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "data": {
+   "time": 156,
+   "lang": "malayalam"
+  }
+ },
+ {
+  "id": "w13",
+  "category": "watch",
+  "title": "Super Deluxe",
+  "why": "strange, bold, never boring.",
+  "moods": [
+   "wired",
+   "okay"
+  ],
+  "data": {
+   "time": 176,
+   "lang": "tamil"
+  }
+ },
+ {
+  "id": "w14",
+  "category": "watch",
+  "title": "96",
+  "why": "one night, one old love. bring tissues.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "data": {
+   "time": 158,
+   "lang": "tamil"
+  }
+ },
+ {
+  "id": "w15",
+  "category": "watch",
+  "title": "Jaane Tu... Ya Jaane Na",
+  "why": "easy, light, every rewatch works.",
+  "moods": [
+   "tired",
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 155,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w16",
+  "category": "watch",
+  "title": "Andhadhun",
+  "why": "twists every ten minutes. phone down.",
+  "moods": [
+   "wired",
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 139,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w17",
+  "category": "watch",
+  "title": "Kahaani",
+  "why": "a mystery that earns its ending.",
+  "moods": [
+   "wired",
+   "okay"
+  ],
+  "data": {
+   "time": 122,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w18",
+  "category": "watch",
+  "title": "Wake Up Sid",
+  "why": "growing up, slowly. bombay in the rain.",
+  "moods": [
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 138,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w19",
+  "category": "watch",
+  "title": "Lunchbox",
+  "why": "a wrong delivery, a right connection.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 104,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w20",
+  "category": "watch",
+  "title": "Taare Zameen Par",
+  "why": "soft and big-hearted.",
+  "moods": [
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 165,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w21",
+  "category": "watch",
+  "title": "Swades",
+  "why": "calm, hopeful, very long. worth it.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 189,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w22",
+  "category": "watch",
+  "title": "Piku",
+  "why": "family, digestion, a road trip. perfect.",
+  "moods": [
+   "tired",
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 125,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w23",
+  "category": "watch",
+  "title": "Udaan",
+  "why": "an escape story that stays with you.",
+  "moods": [
+   "wired",
+   "blah"
+  ],
+  "data": {
+   "time": 134,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w24",
+  "category": "watch",
+  "title": "Kapoor & Sons",
+  "why": "messy family, honest writing.",
+  "moods": [
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 132,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w25",
+  "category": "watch",
+  "title": "Ee Nagaraniki Emaindi",
+  "why": "four friends, one bad plan, very funny.",
+  "moods": [
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "data": {
+   "time": 140,
+   "lang": "telugu"
+  }
+ },
+ {
+  "id": "w26",
+  "category": "watch",
+  "title": "Jathi Ratnalu",
+  "why": "dumb in the best way. just laugh.",
+  "moods": [
+   "tired",
+   "blah",
+   "good"
+  ],
+  "data": {
+   "time": 148,
+   "lang": "telugu"
+  }
+ },
+ {
+  "id": "w27",
+  "category": "watch",
+  "title": "Kantara",
+  "why": "loud, mythic, a big-screen kind of night.",
+  "moods": [
+   "wired",
+   "good"
+  ],
+  "data": {
+   "time": 150,
+   "lang": "kannada"
+  }
+ },
+ {
+  "id": "w28",
+  "category": "watch",
+  "title": "Laapataa Ladies",
+  "why": "two brides swapped. warm and sharp.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 124,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "w29",
+  "category": "watch",
+  "title": "Spirited Away",
+  "why": "bath for your head.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "data": {
+   "time": 125,
+   "lang": "japanese"
+  }
+ },
+ {
+  "id": "w30",
+  "category": "watch",
+  "title": "The Grand Budapest Hotel",
+  "why": "pastel, fast, funny. pure fun.",
+  "moods": [
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "data": {
+   "time": 99,
+   "lang": "english"
+  }
+ },
+ {
+  "id": "w31",
+  "category": "watch",
+  "title": "Ted Lasso · pilot",
+  "why": "kindness as a sport. 30 minutes.",
+  "moods": [
+   "blah",
+   "okay",
+   "good"
+  ],
+  "data": {
+   "time": 31,
+   "lang": "english"
+  }
+ },
+ {
+  "id": "w32",
+  "category": "watch",
+  "title": "Kota Factory · episode 1",
+  "why": "black & white, very real, very kota.",
+  "moods": [
+   "wired",
+   "okay"
+  ],
+  "data": {
+   "time": 40,
+   "lang": "hindi"
+  }
+ },
+ {
+  "id": "t07",
+  "category": "wear",
+  "title": "oversized shirt, open, over a tee",
+  "why": "effortless without trying too hard.",
+  "moods": [
+   "tired",
+   "okay"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t08",
+  "category": "wear",
+  "title": "co-ord set",
+  "why": "one decision, looks like five.",
+  "moods": [
+   "good",
+   "glowing"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t09",
+  "category": "wear",
+  "title": "linen everything",
+  "why": "it is hot. you are not wrong.",
+  "moods": [
+   "tired",
+   "okay",
+   "good"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t10",
+  "category": "wear",
+  "title": "kurta + jeans + kolhapuris",
+  "why": "desi, casual, done.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t11",
+  "category": "wear",
+  "title": "the hoodie, but clean sneakers",
+  "why": "comfort with one sign of effort.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t12",
+  "category": "wear",
+  "title": "one colour, head to toe",
+  "why": "monochrome looks like a plan.",
+  "moods": [
+   "wired",
+   "good"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t13",
+  "category": "wear",
+  "title": "saree, the easy drape",
+  "why": "tonight deserves it.",
+  "moods": [
+   "glowing"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t14",
+  "category": "wear",
+  "title": "track pants + a good tee",
+  "why": "errands mode. nobody minds.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t15",
+  "category": "wear",
+  "title": "denim on denim, different shades",
+  "why": "risky, works more than you think.",
+  "moods": [
+   "good",
+   "glowing"
+  ],
+  "data": {}
+ },
+ {
+  "id": "t16",
+  "category": "wear",
+  "title": "your brightest top",
+  "why": "dress up the mood you want, not the one you have.",
+  "moods": [
+   "blah",
+   "okay"
+  ],
+  "data": {}
+ },
+ {
+  "id": "a25",
+  "category": "do",
+  "title": "cutting chai at the nearest tapri",
+  "why": "ten minutes outside. the city does the rest.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "budget": "u100",
+  "data": {
+   "cost": "₹15",
+   "time": 15
+  }
+ },
+ {
+  "id": "a26",
+  "category": "do",
+  "title": "call nani or dadi",
+  "why": "they will talk for twenty. let them.",
+  "moods": [
+   "blah",
+   "okay",
+   "good"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 20
+  }
+ },
+ {
+  "id": "a27",
+  "category": "do",
+  "title": "oil your hair, properly",
+  "why": "old advice. still works.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 15
+  }
+ },
+ {
+  "id": "a28",
+  "category": "do",
+  "title": "10 min surya namaskar",
+  "why": "twelve rounds. body says thanks.",
+  "moods": [
+   "tired",
+   "wired",
+   "blah"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 10
+  }
+ },
+ {
+  "id": "a29",
+  "category": "do",
+  "title": "walk to a temple, gurudwara or church you pass every day",
+  "why": "go in. sit for five minutes.",
+  "moods": [
+   "wired",
+   "blah",
+   "okay"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 25
+  }
+ },
+ {
+  "id": "a30",
+  "category": "do",
+  "title": "fix one thing in your room",
+  "why": "that loose hinge. that light.",
+  "moods": [
+   "wired",
+   "okay"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 15
+  }
+ },
+ {
+  "id": "a31",
+  "category": "do",
+  "title": "unfollow 10 accounts",
+  "why": "your feed is a diet too.",
+  "moods": [
+   "wired",
+   "blah"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 5
+  }
+ },
+ {
+  "id": "a32",
+  "category": "do",
+  "title": "sit on the terrace, no phone",
+  "why": "fifteen minutes of sky.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 15
+  }
+ },
+ {
+  "id": "a33",
+  "category": "do",
+  "title": "learn one song on a harmonium/guitar app",
+  "why": "badly is fine.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 20
+  }
+ },
+ {
+  "id": "a34",
+  "category": "do",
+  "title": "sort your gallery: delete 50 photos",
+  "why": "tiny clean-up, big relief.",
+  "moods": [
+   "wired",
+   "blah"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 10
+  }
+ },
+ {
+  "id": "a35",
+  "category": "do",
+  "title": "visit the local library",
+  "why": "it is quieter than you remember.",
+  "moods": [
+   "blah",
+   "okay",
+   "good"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 60
+  }
+ },
+ {
+  "id": "a36",
+  "category": "do",
+  "title": "plan a trip you can actually afford",
+  "why": "one weekend, one city, one budget.",
+  "moods": [
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 20
+  }
+ },
+ {
+  "id": "a37",
+  "category": "do",
+  "title": "badminton with whoever is free",
+  "why": "40 minutes, no score kept.",
+  "moods": [
+   "wired",
+   "good"
+  ],
+  "budget": "free",
+  "data": {
+   "cost": "₹0",
+   "time": 40
+  }
+ },
+ {
+  "id": "a38",
+  "category": "do",
+  "title": "cook ma's recipe over a video call",
+  "why": "she will correct everything. that is the point.",
+  "moods": [
+   "blah",
+   "okay",
+   "good"
+  ],
+  "budget": "u100",
+  "data": {
+   "cost": "₹100",
+   "time": 45
+  }
+ },
+ {
+  "id": "m49",
+  "category": "listen",
+  "title": "Kaise Hua",
+  "why": "",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "genre": "bollywood",
+  "data": {
+   "artist": "Vishal Mishra",
+   "q": "Kaise Hua Vishal Mishra"
+  }
+ },
+ {
+  "id": "m50",
+  "category": "listen",
+  "title": "Tum Hi Ho",
+  "why": "",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "genre": "bollywood",
+  "data": {
+   "artist": "Arijit Singh",
+   "q": "Tum Hi Ho Arijit Singh"
+  }
+ },
+ {
+  "id": "m51",
+  "category": "listen",
+  "title": "Ilahi",
+  "why": "",
+  "moods": [
+   "good",
+   "glowing"
+  ],
+  "genre": "bollywood",
+  "data": {
+   "artist": "Arijit Singh",
+   "q": "Ilahi Arijit Singh"
+  }
+ },
+ {
+  "id": "m52",
+  "category": "listen",
+  "title": "Raataan Lambiyan",
+  "why": "",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "genre": "bollywood",
+  "data": {
+   "artist": "Jubin Nautiyal, Asees Kaur",
+   "q": "Raataan Lambiyan Jubin Nautiyal, Asees Kaur"
+  }
+ },
+ {
+  "id": "m53",
+  "category": "listen",
+  "title": "Kho Gaye Hum Kahan",
+  "why": "",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "genre": "indiepop",
+  "data": {
+   "artist": "Prateek Kuhad, Jasleen Royal",
+   "q": "Kho Gaye Hum Kahan Prateek Kuhad, Jasleen Royal"
+  }
+ },
+ {
+  "id": "m54",
+  "category": "listen",
+  "title": "cold/mess",
+  "why": "",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "genre": "indiepop",
+  "data": {
+   "artist": "Prateek Kuhad",
+   "q": "cold/mess Prateek Kuhad"
+  }
+ },
+ {
+  "id": "m55",
+  "category": "listen",
+  "title": "Baarishein",
+  "why": "",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "genre": "indiepop",
+  "data": {
+   "artist": "Anuv Jain",
+   "q": "Baarishein Anuv Jain"
+  }
+ },
+ {
+  "id": "m56",
+  "category": "listen",
+  "title": "Husn",
+  "why": "",
+  "moods": [
+   "blah",
+   "okay"
+  ],
+  "genre": "indiepop",
+  "data": {
+   "artist": "Anuv Jain",
+   "q": "Husn Anuv Jain"
+  }
+ },
+ {
+  "id": "m57",
+  "category": "listen",
+  "title": "Choo Lo",
+  "why": "",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "genre": "indiepop",
+  "data": {
+   "artist": "The Local Train",
+   "q": "Choo Lo The Local Train"
+  }
+ },
+ {
+  "id": "m58",
+  "category": "listen",
+  "title": "Udd Gaye",
+  "why": "",
+  "moods": [
+   "wired",
+   "good",
+   "glowing"
+  ],
+  "genre": "indiepop",
+  "data": {
+   "artist": "Ritviz",
+   "q": "Udd Gaye Ritviz"
+  }
+ },
+ {
+  "id": "m59",
+  "category": "listen",
+  "title": "Kun Faya Kun",
+  "why": "",
+  "moods": [
+   "tired",
+   "okay"
+  ],
+  "genre": "sufi",
+  "data": {
+   "artist": "A.R. Rahman, Javed Ali, Mohit Chauhan",
+   "q": "Kun Faya Kun A.R. Rahman, Javed Ali, Mohit Chauhan"
+  }
+ },
+ {
+  "id": "m60",
+  "category": "listen",
+  "title": "Tajdar-e-Haram",
+  "why": "",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "genre": "sufi",
+  "data": {
+   "artist": "Atif Aslam",
+   "q": "Tajdar-e-Haram Atif Aslam"
+  }
+ },
+ {
+  "id": "m61",
+  "category": "listen",
+  "title": "Afreen Afreen",
+  "why": "",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "genre": "sufi",
+  "data": {
+   "artist": "Rahat Fateh Ali Khan, Momina Mustehsan",
+   "q": "Afreen Afreen Rahat Fateh Ali Khan, Momina Mustehsan"
+  }
+ },
+ {
+  "id": "m62",
+  "category": "listen",
+  "title": "Mast Qalandar",
+  "why": "",
+  "moods": [
+   "wired",
+   "good",
+   "glowing"
+  ],
+  "genre": "sufi",
+  "data": {
+   "artist": "Nusrat Fateh Ali Khan",
+   "q": "Mast Qalandar Nusrat Fateh Ali Khan"
+  }
+ },
+ {
+  "id": "m63",
+  "category": "listen",
+  "title": "Why This Kolaveri Di",
+  "why": "",
+  "moods": [
+   "blah",
+   "good",
+   "glowing"
+  ],
+  "genre": "tamil",
+  "data": {
+   "artist": "Dhanush",
+   "q": "Why This Kolaveri Di Dhanush"
+  }
+ },
+ {
+  "id": "m64",
+  "category": "listen",
+  "title": "Vaathi Coming",
+  "why": "",
+  "moods": [
+   "wired",
+   "good",
+   "glowing"
+  ],
+  "genre": "tamil",
+  "data": {
+   "artist": "Anirudh Ravichander",
+   "q": "Vaathi Coming Anirudh Ravichander"
+  }
+ },
+ {
+  "id": "m65",
+  "category": "listen",
+  "title": "Munbe Vaa",
+  "why": "",
+  "moods": [
+   "tired",
+   "okay"
+  ],
+  "genre": "tamil",
+  "data": {
+   "artist": "Shreya Ghoshal, Naresh Iyer",
+   "q": "Munbe Vaa Shreya Ghoshal, Naresh Iyer"
+  }
+ },
+ {
+  "id": "m66",
+  "category": "listen",
+  "title": "Kanave Kanave",
+  "why": "",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "genre": "tamil",
+  "data": {
+   "artist": "Anirudh Ravichander",
+   "q": "Kanave Kanave Anirudh Ravichander"
+  }
+ },
+ {
+  "id": "m67",
+  "category": "listen",
+  "title": "Naatu Naatu",
+  "why": "",
+  "moods": [
+   "wired",
+   "good",
+   "glowing"
+  ],
+  "genre": "telugu",
+  "data": {
+   "artist": "Rahul Sipligunj, Kaala Bhairava",
+   "q": "Naatu Naatu Rahul Sipligunj, Kaala Bhairava"
+  }
+ },
+ {
+  "id": "m68",
+  "category": "listen",
+  "title": "Samajavaragamana",
+  "why": "",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "genre": "telugu",
+  "data": {
+   "artist": "Sid Sriram",
+   "q": "Samajavaragamana Sid Sriram"
+  }
+ },
+ {
+  "id": "m69",
+  "category": "listen",
+  "title": "Inkem Inkem Inkem Kaavaale",
+  "why": "",
+  "moods": [
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "genre": "telugu",
+  "data": {
+   "artist": "Sid Sriram",
+   "q": "Inkem Inkem Inkem Kaavaale Sid Sriram"
+  }
+ },
+ {
+  "id": "m70",
+  "category": "listen",
+  "title": "Butta Bomma",
+  "why": "",
+  "moods": [
+   "good",
+   "glowing"
+  ],
+  "genre": "telugu",
+  "data": {
+   "artist": "Armaan Malik",
+   "q": "Butta Bomma Armaan Malik"
+  }
+ },
+ {
+  "id": "m71",
+  "category": "listen",
+  "title": "Lover",
+  "why": "",
+  "moods": [
+   "good",
+   "glowing"
+  ],
+  "genre": "punjabi",
+  "data": {
+   "artist": "Diljit Dosanjh",
+   "q": "Lover Diljit Dosanjh"
+  }
+ },
+ {
+  "id": "m72",
+  "category": "listen",
+  "title": "Excuses",
+  "why": "",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "genre": "punjabi",
+  "data": {
+   "artist": "AP Dhillon",
+   "q": "Excuses AP Dhillon"
+  }
+ },
+ {
+  "id": "f43",
+  "category": "eat",
+  "title": "maggi with peas and onion",
+  "why": "the hostel classic, slightly upgraded.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "diet": [
+   "veg"
+  ],
+  "budget": "u100",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹25",
+   "time": 10
+  }
+ },
+ {
+  "id": "f44",
+  "category": "eat",
+  "title": "sprouts chaat",
+  "why": "lime, onion, salt. crunchy and light.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "u100",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹30",
+   "time": 10
+  }
+ },
+ {
+  "id": "f45",
+  "category": "eat",
+  "title": "besan chilla",
+  "why": "five minutes, one pan, very filling.",
+  "moods": [
+   "tired",
+   "okay"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "free",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹20",
+   "time": 12
+  }
+ },
+ {
+  "id": "f46",
+  "category": "eat",
+  "title": "bread upma",
+  "why": "old bread, new life.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "free",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹15",
+   "time": 10
+  }
+ },
+ {
+  "id": "f47",
+  "category": "eat",
+  "title": "egg curry + rice",
+  "why": "spicy gravy, two eggs, done.",
+  "moods": [
+   "tired",
+   "okay",
+   "good"
+  ],
+  "diet": [
+   "non-veg"
+  ],
+  "budget": "u100",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹40",
+   "time": 25
+  }
+ },
+ {
+  "id": "f48",
+  "category": "eat",
+  "title": "paneer bhurji + roti",
+  "why": "protein that tastes like comfort.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "diet": [
+   "veg"
+  ],
+  "budget": "u100",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹80",
+   "time": 20
+  }
+ },
+ {
+  "id": "f49",
+  "category": "eat",
+  "title": "sabudana khichdi",
+  "why": "soft, nutty, light on the stomach.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "u100",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹30",
+   "time": 20
+  }
+ },
+ {
+  "id": "f50",
+  "category": "eat",
+  "title": "lemon rice",
+  "why": "turmeric, peanuts, curry leaves. bright.",
+  "moods": [
+   "okay",
+   "good"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "free",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹20",
+   "time": 15
+  }
+ },
+ {
+  "id": "f51",
+  "category": "eat",
+  "title": "aloo jeera + 2 rotis",
+  "why": "the plain one that never fails.",
+  "moods": [
+   "tired",
+   "blah",
+   "okay"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "free",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹20",
+   "time": 20
+  }
+ },
+ {
+  "id": "f52",
+  "category": "eat",
+  "title": "masala chai + bun maska",
+  "why": "evening fixed in one cup.",
+  "moods": [
+   "tired",
+   "blah"
+  ],
+  "diet": [
+   "veg"
+  ],
+  "budget": "u100",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹30",
+   "time": 10
+  }
+ },
+ {
+  "id": "f53",
+  "category": "eat",
+  "title": "moong dal cheela",
+  "why": "green, light, gut-friendly.",
+  "moods": [
+   "tired",
+   "okay"
+  ],
+  "diet": [
+   "veg",
+   "vegan"
+  ],
+  "budget": "free",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹20",
+   "time": 15
+  }
+ },
+ {
+  "id": "f54",
+  "category": "eat",
+  "title": "chicken curry + rice, one pot",
+  "why": "sunday energy on any day.",
+  "moods": [
+   "okay",
+   "good",
+   "glowing"
+  ],
+  "diet": [
+   "non-veg"
+  ],
+  "budget": "u300",
+  "city": "any",
+  "data": {
+   "where": "your kitchen",
+   "cost": "₹120",
+   "time": 40
+  }
+ }
+]
