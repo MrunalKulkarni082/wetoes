@@ -1,0 +1,10 @@
+{
+  "name": "Wetoes",
+  "short_name": "wetoes",
+  "description": "one pick, not ten. veto or commit.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5EDDF",
+  "theme_color": "#F5EDDF",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
