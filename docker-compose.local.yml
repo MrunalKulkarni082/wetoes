@@ -1,0 +1,27 @@
+# Local launch on this machine: uses the host's Ollama (GPU) instead of the bundled CPU one.
+#   docker compose -f docker-compose.local.yml up -d --build
+# App: http://localhost:3000 (bound to 127.0.0.1 only — not reachable from other machines).
+services:
+  app:
+    build: ./app
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      NODE_ENV: production
+      HOST: 127.0.0.1
+      PORT: "3000"
+      PUBLIC_URL: http://localhost:3000
+      EXTRA_ORIGINS: http://127.0.0.1:3000
+      COOKIE_SECURE: "false"
+      DB_PATH: /data/wetoes.db
+      OLLAMA_URL: http://127.0.0.1:11434
+      LLM_MODEL: qwen2.5:7b
+    volumes:
+      - wetoes-local-data:/data
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
+volumes:
+  wetoes-local-data:
