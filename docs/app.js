@@ -135,6 +135,8 @@ async function handle(a, v, el) {
     case 'say-to': S.say.to = v; return rerenderSay();
     case 'say-tone': S.say.tone = v; return rerenderSay();
     case 'say-lang': S.say.lang = v; return rerenderSay();
+    case 'say-gender': S.say.gender = S.say.gender === v ? null : v; return rerenderSay();
+    case 'go-say': S.ctx.category = 'say'; return goto(S.me ? 'saycompose' : 'auth');
     case 'say-write': return sayWrite(el);
     case 'cycle-tone': return vetoCurrent(el, nextTone());
     case 'veto': return vetoCurrent(el);
@@ -184,7 +186,7 @@ async function submitAuth(form) {
     if (!r) return;
     S.me = r;
     if (!r.isNew) toast('welcome back' + (r.name ? ', ' + r.name : '') + '. your history is here.');
-    goto(S.me.diet ? 'mood' : 'diet');
+    goto(S.me.diet ? (S.ctx.category === 'say' ? 'saycompose' : 'mood') : 'diet');
   } catch (e) { errEl.textContent = errCopy(e); }
 }
 
@@ -324,6 +326,34 @@ async function sharePick() {
   openUrl('https://wa.me/?text=' + encodeURIComponent(text + ' ' + APP_URL));
 }
 
+/* ========== SAY SHOWPIECE ========== */
+const SAY_DEMOS = [
+  ['to ma · warm · hinglish', 'mumma, is baar diwali pe ghar nahi aa paunga, office ne leave nahi di. bahut yaad aayegi aapki mithai…'],
+  ['to boss · funny', 'my scooter has chosen violence this morning, so i’ll be 30 min late. still logging in before my coffee does.'],
+  ['to ex · firm', 'i’m glad you’re doing okay, but i need the late-night texts to stop. please respect that.'],
+  ['to landlord · clear', 'hi, the geyser has been broken for a week. can someone fix it this weekend? i’m home saturday after 11.'],
+  ['to bestie · apologetic', 'i forgot your birthday and i have no excuse. dinner’s on me this week, you pick the place.'],
+];
+const sayCard = (action, slim) => slim
+  ? `<button class="saycard slim" data-a="${action}"><div><div class="title">write my text <span class="sparkle">✦</span></div><div class="sub">stuck on what to say? we&rsquo;ll write it.</div></div><span class="badge">AI</span></button>`
+  : `<button class="saycard" data-a="${action}">
+    <span class="badge"><span class="sparkle">✦</span> AI writes it for you</span>
+    <div class="title">say it better.</div>
+    <div class="sub">the text you&rsquo;ve been dreading &mdash; to ma, your boss, your ex. tell us what&rsquo;s up, pick a vibe, get 3&ndash;4 lines ready to send. english or hinglish.</div>
+    <div class="bubble" id="say-demo"><span class="to">${esc(SAY_DEMOS[0][0])}</span>${esc(SAY_DEMOS[0][1])}</div>
+    <div class="go"><span>write mine</span><span>↗</span></div>
+  </button>`;
+function rotateSayDemo() {
+  let k = 0;
+  screenTimer = setInterval(() => {
+    const el = document.getElementById('say-demo');
+    if (!el) return;
+    k = (k + 1) % SAY_DEMOS.length;
+    el.style.opacity = '0';
+    setTimeout(() => { el.innerHTML = `<span class="to">${esc(SAY_DEMOS[k][0])}</span>${esc(SAY_DEMOS[k][1])}`; el.style.opacity = '1'; }, 350);
+  }, 3800);
+}
+
 /* ========== SCREENS ========== */
 const SCREENS = {};
 const AFTER = {};
@@ -347,11 +377,14 @@ SCREENS.welcome = () => `
     <div class="step"><span class="n">02</span><div><b>get one pick</b><span>just one. picked for your mood, diet and budget.</span></div></div>
     <div class="step"><span class="n">03</span><div><b>keep it or <span class="red">veto</span> it</b><span>veto = show me another. every no teaches us your taste.</span></div></div>
   </div>
+  <div class="mt-l" style="position:relative;z-index:2">${sayCard('start-welcome')}</div>
   <div class="sep"></div>
   <button class="cta mt-l" data-a="start-welcome" style="position:relative;z-index:2"><span>check my mood</span><span class="arrow">↗</span></button>
   <p class="hint" style="text-align:center">been here before? use the same email &mdash; your history is saved on this device.</p>
   <div class="footmeta">no ads &middot; no endless scrolling &middot; your taste is never sold &middot; <button class="linkbtn" data-a="nav-privacy">privacy</button></div>
 </div>`;
+
+AFTER.welcome = rotateSayDemo;
 
 SCREENS.auth = () => `
 <div class="screen active">
@@ -409,6 +442,7 @@ SCREENS.mood = () => `
     <input class="field" name="t" maxlength="300" placeholder="or type it… “long day, need something easy”" autocomplete="off">
     <button type="submit" aria-label="go">↗</button>
   </form>
+  <div class="mt-m">${sayCard('go-say', true)}</div>
   <div class="sep"></div>
   <div class="footmeta" style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(26,22,19,0.1);display:flex;justify-content:space-between">
     <button data-a="nav-hub" style="font-size:9px;letter-spacing:0.18em;font-weight:700">⊞ skip mood, just pick</button>
@@ -420,7 +454,7 @@ SCREENS.mood = () => `
 SCREENS.context = () => {
   const diet = S.me && S.me.diet;
   const moodClass = ({ tired: 'taupe', wired: 'butter', good: 'moss', glowing: 'blush' })[S.ctx.mood] || 'paper';
-  const cats = [['eat', 'eat'], ['watch', 'watch'], ['listen', 'listen to'], ['do', 'do'], ['wear', 'wear'], ['say', 'say']];
+  const cats = [['eat', 'eat'], ['watch', 'watch'], ['listen', 'listen to'], ['do', 'do'], ['wear', 'wear']];
   return `
 <div class="screen active">
   <div class="topbar">${back()}${wordmark}<span class="topmeta">STEP 2 OF 3 &middot; NEED</span></div>
@@ -430,9 +464,10 @@ SCREENS.context = () => {
     <div class="chip ${diet === 'veg' || diet === 'vegan' ? 'moss' : 'paper'}"><span class="dot"></span>${esc(diet === 'everything' ? 'all' : diet || 'all')}</div>
   </div>
   <h1 class="hero" style="margin-top:18px;font-size:56px">what do<br>you <span class="red">need?</span></h1>
-  <p class="hint">tap one &mdash; we&rsquo;ll pick a single thing for it. budget is optional, set it first if you care.</p>
+  <p class="hint">need words? let the AI write your text. need a thing? tap a category below &mdash; we&rsquo;ll pick just one.</p>
+  <div class="mt-m">${sayCard('go-say')}</div>
   <div class="mt-l">
-    <div class="eyebrow" style="margin-bottom:12px">§ PICK ME SOMETHING TO&hellip;</div>
+    <div class="eyebrow" style="margin-bottom:12px">§ OR PICK ME SOMETHING TO&hellip;</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px">${cats.map(([v, l]) => `<button class="pill" data-a="pick-cat" data-v="${v}">${l}</button>`).join('')}</div>
   </div>
   <div class="mt-m">
@@ -445,6 +480,8 @@ SCREENS.context = () => {
   <div class="sep"></div>
 </div>`;
 };
+
+AFTER.context = rotateSayDemo;
 
 SCREENS.music = () => {
   const g = [['kpop', 'k-pop', 'a'], ['hiphop', 'hip hop', 'd'], ['bollywood', 'bollywood', 'b'], ['indiepop', 'indie (desi)', 'c'], ['punjabi', 'punjabi', 'f'], ['sufi', 'sufi', 'e'],
@@ -469,18 +506,21 @@ SCREENS.saycompose = () => {
   return `
 <div class="screen active">
   <div class="topbar">${back('back-context')}${wordmark}<span class="topmeta">TO SAY</span></div>
-  <h1 class="hero mt-m" style="font-size:56px">who&rsquo;s it<br><span class="red">for?</span></h1>
+  <div class="eyebrow red mt-m"><span class="sparkle">✦</span> SAY IT BETTER &middot; AI WRITES IT</div>
+  <h1 class="hero" style="margin-top:10px;font-size:56px">who&rsquo;s it<br><span class="red">for?</span></h1>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">${chipRow('say-to', ['ma', 'papa', 'friend', 'partner', 'boss', 'colleague', 'ex', 'landlord', 'sibling', 'recruiter', 'other'], S.say.to)}</div>
   <div class="eyebrow mt-m" style="margin-bottom:10px">§ WHAT&rsquo;S IT ABOUT</div>
-  <textarea id="say-about" class="field" maxlength="500" placeholder="can’t come home for diwali this year, work won’t give leave">${esc(S.say.about)}</textarea>
+  <textarea id="say-about" class="field" maxlength="500" placeholder="e.g. can’t come home for diwali this year, office won’t give leave. the more detail, the better the text.">${esc(S.say.about)}</textarea>
   <div class="eyebrow mt-m" style="margin-bottom:10px">§ TONE</div>
   <div style="display:flex;flex-wrap:wrap;gap:8px">${chipRow('say-tone', TONES, S.say.tone)}</div>
   <div class="eyebrow mt-m" style="margin-bottom:10px">§ LANGUAGE</div>
   <div style="display:flex;flex-wrap:wrap;gap:8px">${chipRow('say-lang', ['english', 'hinglish'], S.say.lang)}</div>
+  ${S.say.lang === 'hinglish' ? `<div class="eyebrow mt-m" style="margin-bottom:10px">§ I&rsquo;M A <span class="muted">(SO THE HINDI SOUNDS RIGHT &mdash; &ldquo;AAUNGA&rdquo; OR &ldquo;AAUNGI&rdquo;)</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">${chipRow('say-gender', ['guy', 'girl'], S.say.gender)}</div>` : ''}
   <div class="err" id="say-err"></div>
   <div class="sep"></div>
-  <button class="cta mt-m" data-a="say-write"><span>write it for me</span><span class="arrow">↗</span></button>
-  <div class="footmeta">written by a free open-source AI &middot; don&rsquo;t type passwords or anything secret</div>
+  <button class="cta mt-m" data-a="say-write"><span>✦ write it for me</span><span class="arrow">↗</span></button>
+  <div class="footmeta">✦ powered by the wetoes mood engine &middot; don&rsquo;t type passwords or secrets</div>
 </div>`;
 };
 
@@ -497,9 +537,9 @@ SCREENS.pick = () => {
     meta = `<div class="row"><span class="k">TO</span><span class="v">${esc(r.to)}</span></div>
       <div class="row"><span class="k">TONE</span><span class="v">${esc(r.tone)}</span></div>
       <div class="row"><span class="k">LANG</span><span class="v">${esc(r.lang)}</span></div>`;
-    if (r.source === 'template') why = 'the AI is offline, so here’s one of our hand-written ones.';
-    else if (r.source === 'busy') why = 'the free AI is busy, so here’s a hand-written one. veto in a minute for a fresh AI draft.';
-    else if (r.model) why = 'drafted by ' + r.model.replace(/-Instruct.*$/, '').replace(/_/g, '.').toLowerCase() + ' · open-source';
+    if (r.source === 'template') why = '✦ the mood engine is napping, so here’s one we wrote by hand.';
+    else if (r.source === 'busy') why = '✦ the mood engine is catching its breath, so here’s a hand-written one. veto in a minute for a fresh one.';
+    else why = '✦ written by the wetoes mood engine · ' + r.tone + ' vibe';
   } else {
     const it = r.item; const d = it.data || {};
     title = it.title; why = it.why;
@@ -535,7 +575,7 @@ SCREENS.pick = () => {
   <div class="card mt-m">
     <div class="seal" style="border-color:${seal};color:${seal}"><div>${isSay ? 'DRAFT' : 'PICK'}</div><div class="num">№ ${String(r.n || 0).padStart(3, '0')}</div><div>${clockStr().toUpperCase()}</div></div>
     <div class="eyebrow" style="color:${seal}">${isSay ? '§ ONE DRAFT · NOT TEN' : '§ ONE PICK · NOT TEN'}</div>
-    <h1 class="hero" style="margin-top:14px;padding-right:56px;font-size:${isSay ? 32 : cat === 'listen' ? 56 : 60}px;line-height:${isSay ? 1.15 : 0.9}">${isSay ? '&ldquo;' + esc(title) + '&rdquo;' : esc(title) + '<span class="red">.</span>'}</h1>
+    <h1 class="hero" style="margin-top:14px;padding-right:56px;font-size:${isSay ? (title.length > 160 ? 22 : 26) : cat === 'listen' ? 56 : 60}px;line-height:${isSay ? 1.25 : 0.9}">${isSay ? title.split('\n').map((l) => '<span class="dl">' + esc(l) + '</span>').join('') : esc(title) + '<span class="red">.</span>'}</h1>
     <p id="why" style="margin-top:16px;font-size:14px;line-height:1.55;min-height:1em">${esc(why)}</p>
     ${meta ? `<div class="meta">${meta}</div>` : ''}
     <div class="row-actions">${links}<button class="pill mono" data-a="share">share</button>${isSay ? '<button class="pill mono" data-a="copy-draft">copy</button>' : ''}</div>
@@ -578,7 +618,7 @@ SCREENS.yes = () => {
   </div>
   <div style="background:#FFFCF5;border-radius:20px;padding:18px 20px;margin-top:18px;position:relative;z-index:2;color:#1A1613">
     <div class="mono" style="font-size:9px;letter-spacing:0.28em;color:#E8402C;font-weight:700;text-transform:uppercase;margin-bottom:8px">§ ${esc(sub)}</div>
-    <div class="serif" style="font-size:22px;line-height:1.15">${cat === 'say' ? '&ldquo;' + esc(title) + '&rdquo;' : esc(title)}</div>
+    <div class="serif ${cat === 'say' ? 'draft-lines' : ''}" style="font-size:${cat === 'say' ? 18 : 22}px;line-height:1.25">${esc(title)}</div>
     ${cat === 'say' && r ? `<div class="row-actions"><button class="pill mono" data-a="open" data-v="${esc('https://wa.me/?text=' + encodeURIComponent(r.text))}">whatsapp →</button><button class="pill mono" data-a="copy-draft">copy again</button></div>` : ''}
   </div>
   <div id="fb-widget" style="background:rgba(255,252,245,0.7);border-radius:20px;padding:16px 20px;margin-top:12px;position:relative;z-index:2;color:#1A1613">
@@ -613,13 +653,15 @@ SCREENS.hub = () => {
   <h1 class="hero mt-m" style="font-size:48px">pick me<br>something<br>to&hellip;</h1>
   <p class="hint">no mood needed &mdash; tap a category and we&rsquo;ll pick one thing. the line under each is what you did last time.</p>
   <div class="catlist mt-l">
+    ${sayCard('go-say')}
     ${card('eat', 1, '#1A1613;color:#F5EDDF', 'color:#F5EDDF')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">${card('watch', 2, '#E8B4A5')}${card('listen', 3, '#F2D97F')}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">${card('do', 4, '#B8BE94')}${card('wear', 5, '#D4CBB8')}</div>
-    ${card('say', 6, '#FFFCF5;border:1px solid rgba(26,22,19,0.1)', 'color:#1A1613')}
   </div>
 </div>`;
 };
+
+AFTER.hub = rotateSayDemo;
 
 SCREENS.trust = () => {
   const m = S.mem || { kept: 0, vetoed: 0, recent: [] };
@@ -704,7 +746,7 @@ SCREENS.privacy = () => `
   <div class="howto mt-l">
     <div class="step"><span class="n">01</span><div><b>what stays on your device</b><span>your picks, vetoes, history, diet and drafts are saved only in this browser. we never see them. clear your browser data or tap &ldquo;delete my data&rdquo; and they&rsquo;re gone.</span></div></div>
     <div class="step"><span class="n">02</span><div><b>what we receive</b><span>your email and name when you start, and any feedback you choose to send. that&rsquo;s it. we use your email only to reach you about wetoes &mdash; never sold, never shared.</span></div></div>
-    <div class="step"><span class="n">03</span><div><b>the AI</b><span>drafts, typed moods and &ldquo;why this&rdquo; lines are written by free open-source models (gpt-oss, llama, mistral) hosted by OVHcloud in the EU. what you type there is sent to them to get an answer &mdash; so don&rsquo;t type anything secret.</span></div></div>
+    <div class="step"><span class="n">03</span><div><b>the mood engine</b><span>drafts, typed moods and &ldquo;why this&rdquo; lines are written by free open-source models (gpt-oss, llama, mistral) hosted by OVHcloud in the EU. what you type there is sent to them to get an answer &mdash; so don&rsquo;t type anything secret.</span></div></div>
     <div class="step"><span class="n">04</span><div><b>your control</b><span>in settings: download everything, or delete it. to remove your email from our list, write to us.</span></div></div>
   </div>
   ${(window.WETOES_CONFIG || {}).contact ? `<p class="muted mt-l" style="font-size:14px;line-height:1.5">questions or a data request? write to <a class="linkbtn" href="mailto:${esc(window.WETOES_CONFIG.contact)}">${esc(window.WETOES_CONFIG.contact)}</a>.</p>` : ''}
