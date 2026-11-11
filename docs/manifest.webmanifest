@@ -1,0 +1,11 @@
+{
+  "name": "Wetoes",
+  "short_name": "wetoes",
+  "description": "tell us how you feel. one pick for it.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F5EDDF",
+  "theme_color": "#F5EDDF",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
