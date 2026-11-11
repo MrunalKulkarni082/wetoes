@@ -1,5 +1,7 @@
 # Wetoes
 
+### 👉 Live: **[mrunalkulkarni082.github.io/wetoes](https://mrunalkulkarni082.github.io/wetoes/)**: free, no install, works on any phone.
+
 **tell us how you feel. we'll hand you one thing for it.** we pick, you veto. You get one pick at a time for food, music, a watch, something to do, what to wear, or what to say. Every veto teaches it what you'll say yes to.
 
 ## Two ways to run it
