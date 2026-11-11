@@ -136,7 +136,6 @@ async function handle(a, v, el) {
     case 'say-tone': S.say.tone = v; return rerenderSay();
     case 'say-lang': S.say.lang = v; return rerenderSay();
     case 'say-gender': S.say.gender = S.say.gender === v ? null : v; return rerenderSay();
-    case 'go-say': S.ctx.category = 'say'; return goto(S.me ? 'saycompose' : 'auth');
     case 'say-write': return sayWrite(el);
     case 'cycle-tone': return vetoCurrent(el, nextTone());
     case 'veto': return vetoCurrent(el);
@@ -186,7 +185,7 @@ async function submitAuth(form) {
     if (!r) return;
     S.me = r;
     if (!r.isNew) toast('welcome back' + (r.name ? ', ' + r.name : '') + '. your history is here.');
-    goto(S.me.diet ? (S.ctx.category === 'say' ? 'saycompose' : 'mood') : 'diet');
+    goto(S.me.diet ? 'mood' : 'diet');
   } catch (e) { errEl.textContent = errCopy(e); }
 }
 
@@ -326,34 +325,6 @@ async function sharePick() {
   openUrl('https://wa.me/?text=' + encodeURIComponent(text + ' ' + APP_URL));
 }
 
-/* ========== SAY SHOWPIECE ========== */
-const SAY_DEMOS = [
-  ['to ma · warm · hinglish', 'mumma, is baar diwali pe ghar nahi aa paunga, office ne leave nahi di. bahut yaad aayegi aapki mithai…'],
-  ['to boss · funny', 'my scooter has chosen violence this morning, so i’ll be 30 min late. still logging in before my coffee does.'],
-  ['to ex · firm', 'i’m glad you’re doing okay, but i need the late-night texts to stop. please respect that.'],
-  ['to landlord · clear', 'hi, the geyser has been broken for a week. can someone fix it this weekend? i’m home saturday after 11.'],
-  ['to bestie · apologetic', 'i forgot your birthday and i have no excuse. dinner’s on me this week, you pick the place.'],
-];
-const sayCard = (action, slim) => slim
-  ? `<button class="saycard slim" data-a="${action}"><div><div class="title">write my text <span class="sparkle">✦</span></div><div class="sub">stuck on what to say? we&rsquo;ll write it.</div></div><span class="badge">AI</span></button>`
-  : `<button class="saycard" data-a="${action}">
-    <span class="badge"><span class="sparkle">✦</span> AI writes it for you</span>
-    <div class="title">say it better.</div>
-    <div class="sub">the text you&rsquo;ve been dreading &mdash; to ma, your boss, your ex. tell us what&rsquo;s up, pick a vibe, get 3&ndash;4 lines ready to send. english or hinglish.</div>
-    <div class="bubble" id="say-demo"><span class="to">${esc(SAY_DEMOS[0][0])}</span>${esc(SAY_DEMOS[0][1])}</div>
-    <div class="go"><span>write mine</span><span>↗</span></div>
-  </button>`;
-function rotateSayDemo() {
-  let k = 0;
-  screenTimer = setInterval(() => {
-    const el = document.getElementById('say-demo');
-    if (!el) return;
-    k = (k + 1) % SAY_DEMOS.length;
-    el.style.opacity = '0';
-    setTimeout(() => { el.innerHTML = `<span class="to">${esc(SAY_DEMOS[k][0])}</span>${esc(SAY_DEMOS[k][1])}`; el.style.opacity = '1'; }, 350);
-  }, 3800);
-}
-
 /* ========== SCREENS ========== */
 const SCREENS = {};
 const AFTER = {};
@@ -377,14 +348,11 @@ SCREENS.welcome = () => `
     <div class="step"><span class="n">02</span><div><b>get one pick</b><span>just one. picked for your mood, diet and budget.</span></div></div>
     <div class="step"><span class="n">03</span><div><b>keep it or <span class="red">veto</span> it</b><span>veto = show me another. every no teaches us your taste.</span></div></div>
   </div>
-  <div class="mt-l" style="position:relative;z-index:2">${sayCard('start-welcome')}</div>
   <div class="sep"></div>
   <button class="cta mt-l" data-a="start-welcome" style="position:relative;z-index:2"><span>check my mood</span><span class="arrow">↗</span></button>
   <p class="hint" style="text-align:center">been here before? use the same email &mdash; your history is saved on this device.</p>
   <div class="footmeta">no ads &middot; no endless scrolling &middot; your taste is never sold &middot; <button class="linkbtn" data-a="nav-privacy">privacy</button></div>
 </div>`;
-
-AFTER.welcome = rotateSayDemo;
 
 SCREENS.auth = () => `
 <div class="screen active">
@@ -442,7 +410,6 @@ SCREENS.mood = () => `
     <input class="field" name="t" maxlength="300" placeholder="or type it… “long day, need something easy”" autocomplete="off">
     <button type="submit" aria-label="go">↗</button>
   </form>
-  <div class="mt-m">${sayCard('go-say', true)}</div>
   <div class="sep"></div>
   <div class="footmeta" style="margin-top:20px;padding-top:14px;border-top:1px solid rgba(26,22,19,0.1);display:flex;justify-content:space-between">
     <button data-a="nav-hub" style="font-size:9px;letter-spacing:0.18em;font-weight:700">⊞ skip mood, just pick</button>
@@ -454,7 +421,7 @@ SCREENS.mood = () => `
 SCREENS.context = () => {
   const diet = S.me && S.me.diet;
   const moodClass = ({ tired: 'taupe', wired: 'butter', good: 'moss', glowing: 'blush' })[S.ctx.mood] || 'paper';
-  const cats = [['eat', 'eat'], ['watch', 'watch'], ['listen', 'listen to'], ['do', 'do'], ['wear', 'wear']];
+  const cats = [['eat', 'eat'], ['watch', 'watch'], ['listen', 'listen to'], ['do', 'do'], ['wear', 'wear'], ['say', 'say <span class="spark">✦</span>']];
   return `
 <div class="screen active">
   <div class="topbar">${back()}${wordmark}<span class="topmeta">STEP 2 OF 3 &middot; NEED</span></div>
@@ -464,11 +431,10 @@ SCREENS.context = () => {
     <div class="chip ${diet === 'veg' || diet === 'vegan' ? 'moss' : 'paper'}"><span class="dot"></span>${esc(diet === 'everything' ? 'all' : diet || 'all')}</div>
   </div>
   <h1 class="hero" style="margin-top:18px;font-size:56px">what do<br>you <span class="red">need?</span></h1>
-  <p class="hint">need words? let the AI write your text. need a thing? tap a category below &mdash; we&rsquo;ll pick just one.</p>
-  <div class="mt-m">${sayCard('go-say')}</div>
+  <p class="hint">tap one &mdash; we&rsquo;ll pick a single thing for it. &ldquo;say&rdquo; writes a text for you. budget is optional.</p>
   <div class="mt-l">
-    <div class="eyebrow" style="margin-bottom:12px">§ OR PICK ME SOMETHING TO&hellip;</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px">${cats.map(([v, l]) => `<button class="pill" data-a="pick-cat" data-v="${v}">${l}</button>`).join('')}</div>
+    <div class="eyebrow" style="margin-bottom:12px">§ PICK ME SOMETHING TO&hellip;</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">${cats.map(([v, l]) => `<button class="pill${v === 'say' ? ' say' : ''}" data-a="pick-cat" data-v="${v}">${l}</button>`).join('')}</div>
   </div>
   <div class="mt-m">
     <div class="eyebrow" style="margin-bottom:12px">§ BUDGET (OPTIONAL)</div>
@@ -480,8 +446,6 @@ SCREENS.context = () => {
   <div class="sep"></div>
 </div>`;
 };
-
-AFTER.context = rotateSayDemo;
 
 SCREENS.music = () => {
   const g = [['kpop', 'k-pop', 'a'], ['hiphop', 'hip hop', 'd'], ['bollywood', 'bollywood', 'b'], ['indiepop', 'indie (desi)', 'c'], ['punjabi', 'punjabi', 'f'], ['sufi', 'sufi', 'e'],
@@ -506,7 +470,7 @@ SCREENS.saycompose = () => {
   return `
 <div class="screen active">
   <div class="topbar">${back('back-context')}${wordmark}<span class="topmeta">TO SAY</span></div>
-  <div class="eyebrow red mt-m"><span class="sparkle">✦</span> SAY IT BETTER &middot; AI WRITES IT</div>
+  <div class="eyebrow red mt-m"><span class="sparkle">✦</span> SAY IT BETTER &middot; WE WRITE IT FOR YOU</div>
   <h1 class="hero" style="margin-top:10px;font-size:56px">who&rsquo;s it<br><span class="red">for?</span></h1>
   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">${chipRow('say-to', ['ma', 'papa', 'friend', 'partner', 'boss', 'colleague', 'ex', 'landlord', 'sibling', 'recruiter', 'other'], S.say.to)}</div>
   <div class="eyebrow mt-m" style="margin-bottom:10px">§ WHAT&rsquo;S IT ABOUT</div>
@@ -653,15 +617,13 @@ SCREENS.hub = () => {
   <h1 class="hero mt-m" style="font-size:48px">pick me<br>something<br>to&hellip;</h1>
   <p class="hint">no mood needed &mdash; tap a category and we&rsquo;ll pick one thing. the line under each is what you did last time.</p>
   <div class="catlist mt-l">
-    ${sayCard('go-say')}
     ${card('eat', 1, '#1A1613;color:#F5EDDF', 'color:#F5EDDF')}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">${card('watch', 2, '#E8B4A5')}${card('listen', 3, '#F2D97F')}</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">${card('do', 4, '#B8BE94')}${card('wear', 5, '#D4CBB8')}</div>
+    ${card('say', 6, '#FFFCF5;border:1px solid rgba(26,22,19,0.1)', 'color:#1A1613')}
   </div>
 </div>`;
 };
-
-AFTER.hub = rotateSayDemo;
 
 SCREENS.trust = () => {
   const m = S.mem || { kept: 0, vetoed: 0, recent: [] };
